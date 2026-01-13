@@ -3,54 +3,57 @@ include_once __DIR__ . '/../../config/config.php';
 session_start();
 
 if (isset($_POST['login_mahasiswa'])) {
-  $nim      = trim($_POST['nim']);
-  $password = trim($_POST['password']);
+  $identifier = mysqli_real_escape_string($conn, trim($_POST['nim']));
+  $password   = mysqli_real_escape_string($conn, trim($_POST['password']));
 
-  // Validasi Input Kosong
-  if (empty($nim) || empty($password)) {
-    echo "<script>alert('NIM dan Password tidak boleh kosong!'); window.history.back();</script>";
-    exit;
-  }
+  // 1. Cek apakah ini format NIM (Mahasiswa) atau Nama (Petugas)
+  // Asumsi: Jika input diawali angka, kita anggap itu NIM Mahasiswa
+  $is_numeric = is_numeric($identifier);
 
-  $nim      = mysqli_real_escape_string($conn, $nim);
-  $password = mysqli_real_escape_string($conn, $password);
+  if ($is_numeric) {
+    // --- LOGIKA KHUSUS MAHASISWA ---
+    $cek_mhs = mysqli_query($conn, "SELECT * FROM mahasiswa WHERE nim = '$identifier'");
+    $data = mysqli_fetch_assoc($cek_mhs);
 
-  // CEK NIM ADA DI DATABASE
-  $cek_nim = mysqli_query($conn, "SELECT nim FROM mahasiswa WHERE nim = '$nim'");
-
-  if (mysqli_num_rows($cek_nim) === 0) {
-    echo "<script>alert('Login Gagal: NIM tidak terdaftar!'); window.history.back();</script>";
-    exit;
-  }
-
-  // 3.  NIM, Password, ambil Status Proses
-  $sql = "SELECT m.*, p.status_proses 
-            FROM mahasiswa m 
-            JOIN proses_wisuda p ON m.id_mahasiswa = p.id_mahasiswa 
-            WHERE m.nim = '$nim' AND m.password = '$password' LIMIT 1";
-
-  $result = mysqli_query($conn, $sql);
-  $data   = mysqli_fetch_assoc($result);
-
-  if ($data) {
-    //  sudah di-ACC (Status Selesai)
-    if ($data['status_proses'] !== 'selesai') {
-      echo "<script>alert('Login Gagal: Akun Anda belum diverifikasi oleh Petugas/Admin.'); window.location='/unibi_wisuda/index.php';</script>";
+    if (!$data) {
+      echo "<script>alert('Login Gagal: NIM Mahasiswa tidak terdaftar! Silahkan registrasi terlebih dahulu.'); window.history.back();</script>";
       exit;
     }
 
-    // Jika semua lolos, set session
-    $_SESSION['id_mahasiswa']   = $data['id_mahasiswa'];
-    $_SESSION['nama_mahasiswa'] = $data['nama_mahasiswa'];
-    $_SESSION['id_akses']       = $data['id_akses'];
-    $_SESSION['status_login']   = true;
+    if ($data['password'] !== $password) {
+      echo "<script>alert('Login Gagal: Password Mahasiswa salah!'); window.history.back();</script>";
+      exit;
+    }
 
-    echo "<script>alert('Login Berhasil!'); window.location='/unibi_wisuda/views/mahasiswa/dashboard.php';</script>";
+    if ($data['id_akses'] == 0) {
+      echo "<script>alert('Login Gagal: Akun Mahasiswa belum di-ACC oleh Petugas.'); window.history.back();</script>";
+      exit;
+    }
+
+    // Login Berhasil Mahasiswa
+    $_SESSION['id_user'] = $data['id_mahasiswa'];
+    $_SESSION['nama']    = $data['nama_mahasiswa'];
+    $_SESSION['role']    = 'mahasiswa';
+    echo "<script>alert('Selamat Datang Mahasiswa!'); window.location='/UNIBI_WISUDA/views/mahasiswa/dashboard_mahasiswa.php';</script>";
   } else {
-    // Jika NIM ada tapi password salah
-    echo "<script>alert('Login Gagal: Password salah!'); window.history.back();</script>";
+    // --- LOGIKA KHUSUS PETUGAS ---
+    $cek_ptg = mysqli_query($conn, "SELECT * FROM petugas WHERE nama_petugas = '$identifier'");
+    $data_ptg = mysqli_fetch_assoc($cek_ptg);
+
+    if (!$data_ptg) {
+      echo "<script>alert('Login Gagal: Akun Petugas tidak ditemukan!'); window.history.back();</script>";
+      exit;
+    }
+
+    if ($data_ptg['password'] !== $password) {
+      echo "<script>alert('Login Gagal: Password Petugas salah!'); window.history.back();</script>";
+      exit;
+    }
+
+    // Login Berhasil Petugas
+    $_SESSION['id_user'] = $data_ptg['id_petugas'];
+    $_SESSION['nama']    = $data_ptg['nama_petugas'];
+    $_SESSION['role']    = 'petugas';
+    echo "<script>alert('Selamat Datang Petugas!'); window.location='/UNIBI_WISUDA/views/petugas/dashboard_petugas.php';</script>";
   }
-} else {
-  header("Location: /unibi_wisuda/index.php");
-  exit;
 }

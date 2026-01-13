@@ -11,7 +11,7 @@
 
   <div class="login-container">
     <h2>Login Wisudawan</h2>
-    <form action="models/controllers/login.controllers.php" method="POST">
+    <form action="/UNIBI_WISUDA/models/controllers/login.controllers.php" method="POST">
       <div class="form-group">
         <label>NIM</label>
         <input type="text" name="nim" placeholder="Masukkan NIM" required>
@@ -24,7 +24,7 @@
 
       <button type="submit" name="login_mahasiswa">Login</button>
     </form>
-    <p>Belum daftar? <a href="views/mahasiswa/mahasiswa.php">Registrasi di sini</a></p>
+    <p>Belum daftar? <a href="views/mahasiswa/register.php">Registrasi di sini</a></p>
   </div>
 
 </body>
