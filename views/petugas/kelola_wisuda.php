@@ -59,15 +59,16 @@ $query = mysqli_query($conn, $sql);
               onclick="return confirm('Konfirmasi mahasiswa ini?')">Konfirmasi</a>
           <?php else : ?>
             <a href="edit_wisuda.php?id=<?= $data['id_proses']; ?>" class="btn btn-edit">Edit</a>
-            <a href="../../models/controllers/hapus_wisuda.php?id=<?= $data['id_proses']; ?>"
-              class="btn btn-hapus"
-              onclick="return confirm('Hapus data ini?')">Hapus</a>
+
+            <a href="#" class="btn btn-hapus" onclick="konfirmasiHapus('<?= $data['id_proses']; ?>')">Hapus</a>
           <?php endif; ?>
         </td>
       </tr>
     <?php endwhile; ?>
   </tbody>
 </table>
+
+<script src="../../script/index.js"></script>
 </body>
 
 </html>
