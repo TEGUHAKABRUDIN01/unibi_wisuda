@@ -54,7 +54,7 @@ $query = mysqli_query($conn, $sql);
         </td>
         <td>
           <?php if ($data['status_proses'] == 'proses') : ?>
-            <a href="../../models/controllers/konfirmasi_proses.controllers.php?id_proses=<?= $data['id_proses']; ?>"
+            <a href="../../models/controllers/konfirmasi_proses.controller.php?id_proses=<?= $data['id_proses']; ?>"
               class="btn btn-konfirmasi"
               onclick="return confirm('Konfirmasi mahasiswa ini?')">Konfirmasi</a>
           <?php else : ?>
