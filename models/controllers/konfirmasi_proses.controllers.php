@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once __DIR__ . '../../config/config.php';
+include_once __DIR__ . '/../../config/config.php';
 
 // memastikan hanya petugas yang bisa mengakses
 if (!isset($_SESSION['role']) || $_SESSION['role'] != 'petugas') {
@@ -21,13 +21,13 @@ if (isset($_GET['id_proses'])) {
   $data_pendaftaran = mysqli_fetch_assoc($query);
 
   if ($data_pendaftaran) {
-    $id_mahasiswa = $data_pendaftaran['$id_mahasiswa'];
+    $id_mahasiswa = $data_pendaftaran['id_mahasiswa'];
 
     // agar jika salah satu query gagal, semua query dibatalkan
     mysqli_begin_transaction($conn);
 
     try {
-      $sql_update = "UPDATE proses_wisuda SET status_proses = 'Dikonfirmasi', id_petugas = '$id_petugas' WHERE id_proses = '$id_proses'";
+      $sql_update = "UPDATE proses_wisuda SET status_proses = 'selesai', id_petugas = '$id_petugas' WHERE id_proses = '$id_proses'";
 
       if (!mysqli_query($conn, $sql_update)) {
         throw new Exception("Gagal mengupdate tabel proses_wisuda.");
@@ -43,9 +43,9 @@ if (isset($_GET['id_proses'])) {
       mysqli_commit($conn);
 
       echo "<script>alert('Berhasil!!, Akun mahasiswa berhasil diaktifkan'); window.location='/UNIBI_WISUDA/views/petugas/kelola_wisuda.php';</script>";
-    } catch (\Throwable $th) {
+    } catch (Exception $e) {
       mysqli_rollback($conn);
-      echo "<script>alert('Terjadi Kesalahan: " . $th->getMessage() . "'); window.history.back();</script>";
+      die("Gagal Update! Error: " . $e->getMessage());
     }
   } else {
     echo "<script>alert('Data pendaftaran tidak ditemukan!'); window.history.back();</script>";
