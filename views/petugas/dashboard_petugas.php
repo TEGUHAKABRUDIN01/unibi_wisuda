@@ -22,3 +22,5 @@ $total_wisudawan = $data_proses['total_proses'] + $data_selesai['total_selesai']
 echo "Total Mahasiwa: " . $total_wisudawan . "<br>";
 echo "Menunggu Konfirmasi:" . $data_proses['total_proses'] . "<br>";
 echo "Berhasil Konfirmasi:" . $data_selesai['total_selesai'] . "<br>";
+
+echo "<a href='/UNIBI_WISUDA/views/petugas/kelola_wisuda.php'>Kelola Wisudawan</a>";
