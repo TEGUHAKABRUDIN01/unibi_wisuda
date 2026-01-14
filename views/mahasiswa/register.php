@@ -1,3 +1,7 @@
+<?php
+include_once __DIR__ . '/../../config/config.php';
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -10,7 +14,7 @@
   <div class="container">
     <h2>Form Pendaftaran Wisudawan</h2>
 
-    <form action="/UNIBI_WISUDA/models/controllers/register.controllers.php" method="POST" enctype="multipart/form-data">
+    <form action="/UNIBI_WISUDA/models/controllers/register.controller.php" method="POST" enctype="multipart/form-data">
 
       <div class="form-group">
         <label>Nama Lengkap</label>
@@ -26,8 +30,15 @@
         <label>Program Studi</label>
         <select name="id_prodi" required>
           <option value="">-- Pilih Program Studi --</option>
-          <option value="1">Informatika</option>
-          <option value="2">Sistem Informasi</option>
+          <?php
+          // Query untuk mengambil data prodi dari database
+          $query = mysqli_query($conn, "SELECT id_prodi, nama_prodi FROM prodi ORDER BY nama_prodi ASC");
+
+          // Looping data prodi
+          while ($row = mysqli_fetch_assoc($query)) {
+            echo "<option value='{$row['id_prodi']}'>{$row['nama_prodi']}</option>";
+          }
+          ?>
         </select>
       </div>
 
@@ -37,11 +48,11 @@
       </div>
 
       <div class="form-group">
-        <label>Upload SK Lulus (PDF/JPG)</label>
-        <input type="file" name="sk_wisuda" accept=".pdf,.jpg,.jpeg,.png" required>
+        <label>Upload SK Lulus (PDF)</label>
+        <input type="file" name="sk_wisuda" accept=".pdf" required>
       </div>
 
-      <button type="submit" name="register_mahasiswa">Daftar Antrian</button>
+      <button type="submit" name="register_mahasiswa">Daftar</button>
     </form>
   </div>
 </body>
