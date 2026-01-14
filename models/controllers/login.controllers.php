@@ -1,3 +1,4 @@
+
 <?php
 include_once __DIR__ . '/../../config/config.php';
 session_start();
@@ -51,7 +52,7 @@ if (isset($_POST['login_mahasiswa'])) {
     }
 
     // Login Berhasil Petugas
-    $_SESSION['id_user'] = $data_ptg['id_petugas'];
+    $_SESSION['id_petugas'] = $data_ptg['id_petugas'];
     $_SESSION['nama']    = $data_ptg['nama_petugas'];
     $_SESSION['role']    = 'petugas';
     echo "<script>alert('Selamat Datang Petugas!'); window.location='/UNIBI_WISUDA/views/petugas/dashboard_petugas.php';</script>";
