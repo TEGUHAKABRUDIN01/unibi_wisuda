@@ -11,7 +11,7 @@
 
   <div class="login-container">
     <h2>Login Wisudawan</h2>
-    <form action="/UNIBI_WISUDA/models/controllers/login.controllers.php" method="POST">
+    <form action="/UNIBI_WISUDA/models/controllers/login.controller.php" method="POST">
       <div class="form-group">
         <label>NIM</label>
         <input type="text" name="nim" placeholder="Masukkan NIM" required>
