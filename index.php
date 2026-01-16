@@ -23,16 +23,17 @@
     <h3>MASUK</h3>
 
     <div class="login-switch">
-      <button onclick="window.location.href='/UNIBI_WISUDA/views/mahasiswa/login_mahasiswa.php'">Mahasiswa</button>
-      <button onclick="window.location.href='/UNIBI_WISUDA/views/petugas/login_petugas.php'">Petugas</button>
+      <button type="button" class="switch-btn active">Mahasiswa</button>
+      <a href="/UNIBI_WISUDA/views/petugas/login_petugas.php" class="switch-btn">Petugas</a>
     </div>
 
     <form action="/UNIBI_WISUDA/models/controllers/login.controller.php" method="POST">
       <input type="text" name="nim" placeholder="Masukkan NIM" required>
       <input type="password" name="password" placeholder="Masukkan Password" required>
+      <button type="submit" name="login_mahasiswa">Login</button>
     </form>
 
-    <p>Belum daftar? <a href="views/mahasiswa/register.php">Registrasi di sini</a></p>
+    <p>Belum daftar? <a href="views/mahasiswa/register.php">Daftar disini</a></p>
   </div>
 
 </div>

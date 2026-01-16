@@ -42,7 +42,7 @@ if (isset($_GET['id_proses'])) {
       // jika semuanya berhasil, simpan perubahan secara permanen
       mysqli_commit($conn);
 
-      echo "<script>alert('Berhasil!!, Akun mahasiswa berhasil diaktifkan'); window.location='/UNIBI_WISUDA/views/petugas/kelola_wisuda.php';</script>";
+      echo "<script>alert('Berhasil!!, Akun mahasiswa berhasil diaktifkan'); window.location='/UNIBI_WISUDA/views/petugas/dashboard_petugas.php';</script>";
     } catch (Exception $e) {
       mysqli_rollback($conn);
       die("Gagal Update! Error: " . $e->getMessage());

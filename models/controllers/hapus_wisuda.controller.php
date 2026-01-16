@@ -36,7 +36,7 @@ if (isset($_GET['id_proses'])) {
 
       echo "<script>
                     alert('Data mahasiswa dan pendaftaran berhasil dihapus!'); 
-                    window.location='/UNIBI_WISUDA/views/petugas/kelola_wisuda.php';
+                    window.location='/UNIBI_WISUDA/views/petugas/kelola_mahasiswa.php';
                   </script>";
     } catch (Exception $e) {
       mysqli_rollback($conn);

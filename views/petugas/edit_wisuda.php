@@ -40,6 +40,7 @@ if (!$data) {
    Buffer ke layout
 ================================ */
 $title = "Edit Mahasiswa";
+$currentPage = "edit_wisuda.php"; // Set halaman aktif sebagai kelola_mahasiswa
 ob_start();
 ?>
 
@@ -107,7 +108,7 @@ ob_start();
           </button>
         <?php endif; ?>
 
-        <a href="dashboard_petugas.php" class="btn btn-secondary">
+        <a href="kelola_mahasiswa.php" class="btn btn-secondary">
           Kembali
         </a>
       </div>

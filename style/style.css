@@ -75,6 +75,32 @@ body.login-page {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 20px;
+  gap: 10px;
+}
+
+.login-switch .switch-btn {
+  background: #f0f0f0;
+  border: 2px solid #ccc;
+  color: #666;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  display: inline-block;
+  transition: 0.3s;
+}
+
+.login-switch .switch-btn:hover {
+  background: #e0e0e0;
+  border-color: var(--primary);
+}
+
+.login-switch .switch-btn.active {
+  background: var(--secondary);
+  color: white;
+  border-color: var(--secondary);
 }
 
 .login-switch button {
@@ -449,8 +475,13 @@ tbody tr:hover {
   font-size: 12px;
   font-weight: 600;
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin-right: 6px;
+  white-space: nowrap;
+  min-height: 32px;
+  min-width: 60px;
 }
 
 /* KONFIRMASI */

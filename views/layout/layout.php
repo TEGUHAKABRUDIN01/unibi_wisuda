@@ -12,6 +12,12 @@ if (!isset($_SESSION['role'])) {
 // Fungsi untuk deteksi halaman aktif
 function isActive($page) {
     $currentPage = basename($_SERVER['PHP_SELF']);
+    
+    // Jika di edit_wisuda.php, anggap kelola_mahasiswa.php yang aktif
+    if ($currentPage === 'edit_wisuda.php') {
+        return $page === 'kelola_mahasiswa.php' ? 'active' : '';
+    }
+    
     return $currentPage === $page ? 'active' : '';
 }
 ?>

@@ -18,6 +18,11 @@
     <div class="right-card">
       <h3>MASUK</h3>
 
+      <div class="login-switch">
+        <a href="/UNIBI_WISUDA/index.php" class="switch-btn">Mahasiswa</a>
+        <button type="button" class="switch-btn active">Petugas</button>
+      </div>
+
       <form action="/UNIBI_WISUDA/models/controllers/login_petugas.controller.php" method="POST">
         <div class="form-group">
           <label>Nama Petugas</label>
