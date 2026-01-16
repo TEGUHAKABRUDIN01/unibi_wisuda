@@ -21,7 +21,7 @@ if (isset($_POST['edit_data'])) {
     mysqli_query($conn, $sql_proses);
 
     mysqli_commit($conn);
-    echo "<script>alert('Data diedit!'); window.location='/UNIBI_WISUDA/views/petugas/kelola_wisuda.php';</script>";
+    echo "<script>alert('Data diedit!'); window.location='/UNIBI_WISUDA/views/petugas/dashboard_petugas.php';</script>";
   } catch (Exception $e) {
     mysqli_rollback($conn);
     echo "<script>alert('Gagal update data!'); window.history.back();</script>";

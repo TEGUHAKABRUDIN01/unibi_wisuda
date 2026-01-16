@@ -30,7 +30,6 @@
     <form action="/UNIBI_WISUDA/models/controllers/login.controller.php" method="POST">
       <input type="text" name="nim" placeholder="Masukkan NIM" required>
       <input type="password" name="password" placeholder="Masukkan Password" required>
-      <button type="submit" name="login_mahasiswa">Login</button>
     </form>
 
     <p>Belum daftar? <a href="views/mahasiswa/register.php">Registrasi di sini</a></p>

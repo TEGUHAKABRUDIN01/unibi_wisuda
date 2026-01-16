@@ -9,7 +9,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'petugas') {
 
 $id_proses = $_GET['id'] ?? null;
 if (!$id_proses) {
-  header("Location: kelola_wisuda.php");
+  header("Location: dashboard_petugas.php");
   exit;
 }
 
@@ -32,7 +32,7 @@ $query = mysqli_query($conn, "
 $data = mysqli_fetch_assoc($query);
 
 if (!$data) {
-  echo "<script>alert('Data tidak ditemukan'); window.location='kelola_wisuda.php';</script>";
+  echo "<script>alert('Data tidak ditemukan'); window.location='dashboard_petugas.php';</script>";
   exit;
 }
 
@@ -107,7 +107,7 @@ ob_start();
           </button>
         <?php endif; ?>
 
-        <a href="kelola_wisuda.php" class="btn btn-secondary">
+        <a href="dashboard_petugas.php" class="btn btn-secondary">
           Kembali
         </a>
       </div>
