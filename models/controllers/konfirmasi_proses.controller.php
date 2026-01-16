@@ -13,7 +13,7 @@ if (isset($_GET['id_proses'])) {
   $id_proses = mysqli_real_escape_string($conn, $_GET['id_proses']);
   $id_petugas = $_SESSION['id_petugas'];
 
-  // 2. QUERY DATABASE (JOIN Mahasiswa dengan Prodi)
+  // QUERY DATABASE (JOIN Mahasiswa dengan Prodi)
   $sql_mhs = "SELECT m.nim, m.id_mahasiswa, pr.nama_prodi 
                 FROM proses_wisuda p 
                 JOIN mahasiswa m ON p.id_mahasiswa = m.id_mahasiswa
@@ -28,7 +28,7 @@ if (isset($_GET['id_proses'])) {
     $nim = $data_mhs['nim'];
     $nama_prodi = strtoupper($data_mhs['nama_prodi']);
 
-    // 3. LOGIKA PREFIX KURSI BERDASARKAN NAMA PRODI
+    // LOGIKA PREFIX KURSI BERDASARKAN NAMA PRODI
     $prefix = "";
     if (strpos($nama_prodi, 'INFORMATIKA') !== false) {
       $prefix = "IF";
@@ -48,20 +48,20 @@ if (isset($_GET['id_proses'])) {
       $prefix = "UMUM";
     }
 
-    // 4. GENERATE NOMOR URUT KURSI
+    // GENERATE NOMOR URUT KURSI
     $query_urut = mysqli_query($conn, "SELECT COUNT(*) as total FROM kursi WHERE no_kursi LIKE '$prefix-%'");
     $row_urut = mysqli_fetch_assoc($query_urut);
     $nomor_baru = $row_urut['total'] + 1;
     $no_kursi = $prefix . "-" . str_pad($nomor_baru, 3, "0", STR_PAD_LEFT);
 
-    // 5. GENERATE BARCODE BASE64
+    // GENERATE BARCODE BASE64
     ob_start();
     QRcode::png($nim, null, QR_ECLEVEL_L, 5, 2);
     $image_binary = ob_get_contents();
     ob_end_clean();
     $base64_image = 'data:image/png;base64,' . base64_encode($image_binary);
 
-    // 6. EKSEKUSI DATABASE (TRANSACTION)
+    // EKSEKUSI DATABASE (TRANSACTION)
     mysqli_begin_transaction($conn);
     try {
       // Update Status Proses
