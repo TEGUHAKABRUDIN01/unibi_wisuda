@@ -1,0 +1,87 @@
+<?php
+session_start();
+include_once __DIR__ . '/../../config/config.php';
+
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'petugas') {
+  header("Location: /UNIBI_WISUDA/index.php");
+  exit;
+}
+
+$sql = "SELECT 
+          p.id_proses,
+          m.nim,
+          m.nama_mahasiswa,
+          (SELECT nama_pendamping FROM pendamping 
+            WHERE id_mahasiswa = m.id_mahasiswa LIMIT 1 OFFSET 0) AS pendamping1,
+          (SELECT nama_pendamping FROM pendamping 
+            WHERE id_mahasiswa = m.id_mahasiswa LIMIT 1 OFFSET 1) AS pendamping2,
+          (SELECT no_kursi FROM kursi 
+            WHERE id_proses = p.id_proses LIMIT 1) AS no_kursi,
+          b.barcode_file
+        FROM proses_wisuda p
+        JOIN mahasiswa m ON p.id_mahasiswa = m.id_mahasiswa
+        LEFT JOIN barcode b ON p.id_proses = b.id_proses
+        ORDER BY p.id_proses DESC";
+
+$query = mysqli_query($conn, $sql);
+
+$title = "Detail Wisuda";
+ob_start();
+?>
+
+<h1>Detail Wisuda</h1>
+
+<div class="table-container">
+<table>
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>NIM</th>
+      <th>Nama</th>
+      <th>No Kursi</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php $no = 1; while ($d = mysqli_fetch_assoc($query)) : ?>
+    <tr>
+      <td><?= $no++; ?></td>
+      <td><?= $d['nim']; ?></td>
+      <td><?= $d['nama_mahasiswa']; ?></td>
+      <td><?= $d['no_kursi'] ?? '-'; ?></td>
+      <td>
+        <button class="btn btn-detail"
+          onclick='openDetailModal(<?= json_encode($d); ?>)'>
+          Lihat
+        </button>
+      </td>
+    </tr>
+    <?php endwhile; ?>
+  </tbody>
+</table>
+</div>
+
+<!-- MODAL -->
+<div id="detailModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeDetailModal()">&times;</span>
+
+    <h3>Detail Wisudawan</h3>
+    <p><b>Nama:</b> <span id="m_nama"></span></p>
+    <p><b>NIM:</b> <span id="m_nim"></span></p>
+    <p><b>Pendamping 1:</b> <span id="m_p1"></span></p>
+    <p><b>Pendamping 2:</b> <span id="m_p2"></span></p>
+    <p><b>No Kursi:</b> <span id="m_kursi"></span></p>
+
+    <div class="qr-box">
+      <img id="m_qr" alt="QR Code">
+    </div>
+  </div>
+</div>
+
+<script src="../../script/detail_wisuda.js"></script>
+
+<?php
+$content = ob_get_clean();
+include_once __DIR__ . '/../layout/layout.php';
+?>

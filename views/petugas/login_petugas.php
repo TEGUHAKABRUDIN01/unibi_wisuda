@@ -1,41 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
+<html lang="id"> <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wisuda Unibi</title>
+  <title>Wisuda Unibi - Login Petugas</title>
+  <link rel="stylesheet" href="../../style/style.css">
 </head>
 
-<body>
+<body class="login-page">
 
-  <div class="login-container">
-    <h2>Login Petugas</h2>
-
-    <!-- Tombol menu login -->
-    <div>
-      <a href="/UNIBI_WISUDA/index.php">
-        <button type="button">Mahasiswa</button>
-      </a>
-      <button type="button">Petugas</button>
+  <div class="login-container"> <div class="left-card">
+      <img src="../../uploads/logo.png" alt="Logo UNIBI" />
+      <h2>UNIBI</h2>
+      <p>"Be The Young Entrepreneur"</p>
+      <span>Happy Graduation</span>
     </div>
-    <br>
 
-    <!-- Form login khusus petugas -->
-    <form action="/UNIBI_WISUDA/models/controllers/login_petugas.controller.php" method="POST">
-      <div class="form-group">
-        <label>Nama Petugas</label>
-        <input type="text" name="nim" placeholder="Masukkan Nama Petugas" required>
-      </div>
+    <div class="right-card">
+      <h3>MASUK</h3>
 
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" name="password" placeholder="Masukkan Password" required>
-      </div>
+      <form action="/UNIBI_WISUDA/models/controllers/login_petugas.controller.php" method="POST">
+        <div class="form-group">
+          <label>Nama Petugas</label>
+          <input type="text" name="nim" placeholder="Masukkan Nama Petugas" required>
+        </div>
 
-      <button type="submit" name="login_petugas">Login</button>
-    </form>
-  </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="Masukkan Password" required>
+        </div>
 
-</body>
+        <button type="submit" name="login_petugas">Login</button>
+      </form>
+    </div>
+
+  </div> </body>
 </html>

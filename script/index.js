@@ -6,3 +6,4 @@ function konfirmasiHapus(id) {
     alert("Data gagal dihapus!");
   }
 }
+
