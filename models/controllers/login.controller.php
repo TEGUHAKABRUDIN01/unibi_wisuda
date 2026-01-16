@@ -26,7 +26,7 @@ if (isset($_POST['login_mahasiswa'])) {
   }
 
   // Login Berhasil Mahasiswa
-  $_SESSION['id_user'] = $data['id_mahasiswa'];
+  $_SESSION['id_mahasiswa'] = $data['id_mahasiswa'];
   $_SESSION['nama']    = $data['nama_mahasiswa'];
   $_SESSION['role']    = 'mahasiswa';
   echo "<script>alert('Selamat Datang Mahasiswa!'); window.location='/UNIBI_WISUDA/views/mahasiswa/dashboard_mahasiswa.php';</script>";

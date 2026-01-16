@@ -40,7 +40,8 @@ ob_start();
       </tr>
     </thead>
     <tbody>
-      <?php $no = 1; while ($data = mysqli_fetch_assoc($query)) : ?>
+      <?php $no = 1;
+      while ($data = mysqli_fetch_assoc($query)) : ?>
         <tr>
           <td><?= $no++; ?></td>
           <td><?= $data['nim']; ?></td>
@@ -54,15 +55,18 @@ ob_start();
           </td>
           <td>
             <?php if ($data['status_proses'] === 'proses') : ?>
-              <a
-                href="../../models/controllers/konfirmasi_proses.controller.php?id_proses=<?= $data['id_proses']; ?>"
-                class="btn btn-konfirmasi"
-                onclick="return confirm('Konfirmasi mahasiswa ini?')">
+              <a href="../../models/controllers/konfirmasi_proses.controller.php?id_proses=<?= $data['id_proses']; ?>"
+                class="btn-konfirmasi"
+                onclick="return confirm('Konfirmasi pendaftaran mahasiswa ini?')">
                 Konfirmasi
               </a>
             <?php else : ?>
               <a href="edit_wisuda.php?id=<?= $data['id_proses']; ?>" class="btn btn-edit">Edit</a>
-              <a href="../../models/controllers/hapus_wisuda.controller.php?id_proses=<?= $data['id_proses']; ?>" class="btn btn-hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</a>
+              <a href="../../models/controllers/hapus_wisuda.controller.php?id_proses=<?= $data['id_proses']; ?>"
+                class="btn-hapus"
+                onclick="return confirm('Apakah Anda yakin ingin menghapus data pendaftaran ini?')">
+                Hapus
+              </a>
             <?php endif; ?>
           </td>
         </tr>
