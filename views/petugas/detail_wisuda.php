@@ -32,33 +32,34 @@ ob_start();
 <h1>Detail Wisuda</h1>
 
 <div class="table-container">
-<table>
-  <thead>
-    <tr>
-      <th>No</th>
-      <th>NIM</th>
-      <th>Nama</th>
-      <th>No Kursi</th>
-      <th>Aksi</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php $no = 1; while ($d = mysqli_fetch_assoc($query)) : ?>
-    <tr>
-      <td><?= $no++; ?></td>
-      <td><?= $d['nim']; ?></td>
-      <td><?= $d['nama_mahasiswa']; ?></td>
-      <td><?= $d['no_kursi'] ?? '-'; ?></td>
-      <td>
-        <button class="btn btn-detail"
-          onclick='openDetailModal(<?= json_encode($d); ?>)'>
-          Lihat
-        </button>
-      </td>
-    </tr>
-    <?php endwhile; ?>
-  </tbody>
-</table>
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>NIM</th>
+        <th>Nama</th>
+        <th>No Kursi</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php $no = 1;
+      while ($d = mysqli_fetch_assoc($query)) : ?>
+        <tr>
+          <td><?= $no++; ?></td>
+          <td><?= $d['nim']; ?></td>
+          <td><?= $d['nama_mahasiswa']; ?></td>
+          <td><?= $d['no_kursi'] ?? '-'; ?></td>
+          <td>
+            <button class="btn btn-detail"
+              onclick='openDetailModal(<?= json_encode($d); ?>)'>
+              Lihat
+            </button>
+          </td>
+        </tr>
+      <?php endwhile; ?>
+    </tbody>
+  </table>
 </div>
 
 <!-- MODAL -->
@@ -74,7 +75,7 @@ ob_start();
     <p><b>No Kursi:</b> <span id="m_kursi"></span></p>
 
     <div class="qr-box">
-      <img id="m_qr" alt="QR Code">
+      <img id="m_qr" alt="QR Code" src="">
     </div>
   </div>
 </div>

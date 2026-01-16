@@ -10,28 +10,28 @@
 
 <body class="login-page">
 
-<div class="login-container">
+  <div class="login-container">
 
-  <div class="left-card">
-    <h2>UNIBI</h2>
-    <p>"Be The Young Entrepreneur"</p>
-    <span>Happy Graduation</span>
+    <div class="left-card">
+      <h2>UNIBI</h2>
+      <p>"Be The Young Entrepreneur"</p>
+      <span>Happy Graduation</span>
+    </div>
+
+    <div class="right-card">
+      <h3>MASUK</h3>
+
+
+      <form action="/UNIBI_WISUDA/models/controllers/login.controller.php" method="POST">
+        <input type="text" name="nim" placeholder="Masukkan NIM" required>
+        <input type="password" name="password" placeholder="Masukkan Password" required>
+        <button type="submit" name="login_mahasiswa">Login</button>
+      </form>
+
+      <p>Belum daftar? <a href="/UNIBI_WISUDA/views/mahasiswa/register.php">Daftar Sekarang</a></p>
+    </div>
+
   </div>
-
-  <div class="right-card">
-    <h3>MASUK</h3>
-
-
-    <form action="/UNIBI_WISUDA/models/controllers/login.controller.php" method="POST">
-      <input type="text" name="nim" placeholder="Masukkan NIM" required>
-      <input type="password" name="password" placeholder="Masukkan Password" required>
-      <button type="submit" name="login_mahasiswa">Login</button>
-    </form>
-
-    <p>Belum daftar? <a href="views/mahasiswa/register.php">Registrasi di sini</a></p>
-  </div>
-
-</div>
 
 </body>
 
