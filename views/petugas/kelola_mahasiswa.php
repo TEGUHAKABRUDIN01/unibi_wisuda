@@ -62,7 +62,7 @@ ob_start();
               </a>
             <?php else : ?>
               <a href="edit_wisuda.php?id=<?= $data['id_proses']; ?>" class="btn btn-edit">Edit</a>
-              <a href="#" class="btn btn-hapus">Hapus</a>
+              <a href="../../models/controllers/hapus_wisuda.controller.php?id_proses=<?= $data['id_proses']; ?>" class="btn btn-hapus" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</a>
             <?php endif; ?>
           </td>
         </tr>

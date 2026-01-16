@@ -81,7 +81,8 @@ if (isset($_GET['id_proses'])) {
                                 ON DUPLICATE KEY UPDATE no_kursi='$no_kursi'");
 
       mysqli_commit($conn);
-      echo "<script>alert('Berhasil! Barcode dibuat & Kursi diberikan: $no_kursi'); window.location='/UNIBI_WISUDA/views/petugas/kelola_wisuda.php';</script>";
+
+      echo "<script>alert('Berhasil!!, Akun mahasiswa berhasil diaktifkan'); window.location='/UNIBI_WISUDA/views/petugas/kelola_wisuda.php';</script>";
     } catch (Exception $e) {
       mysqli_rollback($conn);
       die("Error Database: " . $e->getMessage());

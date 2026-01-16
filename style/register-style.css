@@ -1,0 +1,206 @@
+/* =========================
+   REGISTER PAGE STYLES
+========================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+:root {
+  --primary: #2B6277;
+  --secondary: #1AC6BC;
+}
+
+body.register-page {
+  height: 100vh;
+  background: #f2f5f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.register-container {
+  display: flex;
+  width: 850px;
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* LEFT SIDE */
+.register-left {
+  width: 40%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: white;
+  padding: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.register-left img {
+  width: 110px;
+  margin-bottom: 15px;
+}
+
+.register-left h2 {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.register-left p {
+  font-size: 13px;
+  margin-bottom: 12px;
+  font-weight: 300;
+}
+
+.register-left span {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* RIGHT SIDE */
+.register-right {
+  width: 60%;
+  padding: 35px;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+.register-right h3 {
+  font-size: 22px;
+  color: var(--primary);
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  transition: 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--secondary);
+  box-shadow: 0 0 5px rgba(26, 198, 188, 0.3);
+}
+
+.form-group input[type="file"] {
+  padding: 8px;
+  background: #fafafa;
+}
+
+.register-form button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 12px;
+  background: var(--secondary);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.3s;
+}
+
+.register-form button:hover {
+  background: #17a99a;
+}
+
+.register-right p {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 13px;
+  color: #666;
+}
+
+.register-right a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.register-right a:hover {
+  text-decoration: underline;
+}
+
+/* SCROLLBAR STYLING */
+.register-right::-webkit-scrollbar {
+  width: 8px;
+}
+
+.register-right::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.register-right::-webkit-scrollbar-thumb {
+  background: var(--secondary);
+  border-radius: 10px;
+}
+
+.register-right::-webkit-scrollbar-thumb:hover {
+  background: #17a99a;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .register-container {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .register-left,
+  .register-right {
+    width: 100%;
+  }
+
+  .register-left {
+    padding: 30px;
+  }
+
+  .register-right {
+    padding: 30px;
+  }
+
+  .register-left img {
+    width: 100px;
+  }
+
+  .register-left h2 {
+    font-size: 28px;
+  }
+}

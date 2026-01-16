@@ -3,12 +3,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wisuda Unibi - Login Petugas</title>
-  <link rel="stylesheet" href="../../style/style.css">
+  <link rel="stylesheet" href="../../style/login-style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body class="login-page">
 
-  <div class="login-container"> <div class="left-card">
+  <div class="login-container">
+    <div class="left-card">
       <img src="../../uploads/logo.png" alt="Logo UNIBI" />
       <h2>UNIBI</h2>
       <p>"Be The Young Entrepreneur"</p>
@@ -17,6 +19,11 @@
 
     <div class="right-card">
       <h3>MASUK</h3>
+
+      <div class="login-switch">
+        <a href="/UNIBI_WISUDA/index.php" class="switch-btn">Mahasiswa</a>
+        <button type="button" class="switch-btn active">Petugas</button>
+      </div>
 
       <form action="/UNIBI_WISUDA/models/controllers/login_petugas.controller.php" method="POST">
         <div class="form-group">
@@ -33,5 +40,5 @@
       </form>
     </div>
 
-  </div> </body>
+  </div>
 </html>
