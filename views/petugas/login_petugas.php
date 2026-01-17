@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="id"> <head>
   <meta charset="UTF-8">
@@ -42,3 +46,15 @@
 
   </div>
 </html>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<?php if (isset($_SESSION['swal_error'])): ?>
+<script>
+  Swal.fire({
+    icon: 'error',
+    title: 'Login Gagal',
+    text: '<?= $_SESSION['swal_error']; ?>'
+  });
+</script>
+<?php unset($_SESSION['swal_error']); endif; ?>

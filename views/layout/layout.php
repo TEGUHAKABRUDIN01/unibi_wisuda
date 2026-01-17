@@ -26,7 +26,19 @@ function isActive($page) {
 <head>
     <meta charset="UTF-8">
     <title><?= $title ?? 'Dashboard' ?></title>
+
     <link rel="stylesheet" href="/UNIBI_WISUDA/style/style.css">
+
+<?php if ($_SESSION['role'] === 'petugas'): ?>
+    <link rel="stylesheet" href="/UNIBI_WISUDA/style/petugas/dashboard.css">
+    <link rel="stylesheet" href="/UNIBI_WISUDA/style/petugas/kelola_mahasiswa.css">
+<?php endif; ?>
+
+<?php if ($_SESSION['role'] === 'mahasiswa'): ?>
+    <link rel="stylesheet" href="/UNIBI_WISUDA/style/mahasiswa/dashboard.css">
+    <link rel="stylesheet" href="/UNIBI_WISUDA/style/mahasiswa/form_pendamping.css">
+<?php endif; ?>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body class="dashboard-page">
@@ -41,7 +53,9 @@ function isActive($page) {
                 <div class="dropdown-header">
                     <span><?= htmlspecialchars($_SESSION['nama'] ?? 'User') ?></span>
                 </div>
-                <a href="/UNIBI_WISUDA/models/controllers/logout.controller.php" class="dropdown-item">
+                <!-- <a href="/UNIBI_WISUDA/models/controllers/logout.controller.php" -->
+                <a href="#"
+                 onclick="logout()" class="dropdown-item">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
             </div>
@@ -63,6 +77,19 @@ function isActive($page) {
             <i class="fas fa-graduation-cap"></i> Detail Wisuda
         </a>
     <?php endif; ?>
+
+    <?php if ($_SESSION['role'] === 'mahasiswa'): ?>
+    <a href="/UNIBI_WISUDA/views/mahasiswa/dashboard_mahasiswa.php"
+       class="sidebar-link <?= isActive('dashboard_mahasiswa.php') ?>">
+        <i class="fas fa-home"></i> Dashboard
+    </a>
+
+    <a href="/UNIBI_WISUDA/views/mahasiswa/form_pendamping.php"
+       class="sidebar-link <?= isActive('form_pendamping.php') ?>">
+        <i class="fas fa-user-friends"></i> Form Pendamping
+    </a>
+<?php endif; ?>
+
 </div>
 
 <div class="main">
@@ -84,6 +111,123 @@ function isActive($page) {
         }
     });
 </script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/UNIBI_WISUDA/script/index.js"></script>
+
+
+
+<?php if (isset($_SESSION['swal_success'])): ?>
+<script>
+Swal.fire({
+  icon: 'success',
+  title: 'Berhasil',
+  text: '<?= $_SESSION['swal_success']; ?>',
+  confirmButtonText: 'OK'
+});
+</script>
+<?php unset($_SESSION['swal_success']); endif; ?>
+
+<?php if (isset($_SESSION['swal_error'])): ?>
+<script>
+Swal.fire({
+  icon: 'error',
+  title: 'Gagal',
+  text: '<?= $_SESSION['swal_error']; ?>',
+  confirmButtonText: 'OK'
+});
+</script>
+<?php unset($_SESSION['swal_error']); endif; ?>
+
+
+
+<script>
+function hapusWisuda(id) {
+  Swal.fire({
+    title: 'Yakin ingin menghapus?',
+    text: 'Data mahasiswa dan wisuda akan dihapus permanen!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Ya, hapus!',
+    cancelButtonText: 'Batal'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href =
+        '../../models/controllers/hapus_wisuda.controller.php?id_proses=' + id;
+    }
+  });
+}
+</script>
+
+ 
+
+<script>
+function konfirmasiWisuda(id) {
+  Swal.fire({
+    title: 'Konfirmasi Wisuda?',
+    text: 'Status mahasiswa akan dikonfirmasi dan tidak bisa dibatalkan.',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#28a745',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Ya, konfirmasi',
+    cancelButtonText: 'Batal'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href =
+        '../../models/controllers/konfirmasi_proses.controller.php?id_proses=' + id;
+    }
+  });
+}
+</script>
+
+<?php if (isset($_SESSION['swal_success'])): ?>
+<script>
+Swal.fire({
+  icon: 'success',
+  title: 'Berhasil',
+  text: '<?= $_SESSION['swal_success']; ?>',
+  confirmButtonText: 'OK'
+});
+</script>
+<?php unset($_SESSION['swal_success']); endif; ?>
+
+<?php if (isset($_SESSION['swal_error'])): ?>
+<script>
+Swal.fire({
+  icon: 'error',
+  title: 'Gagal',
+  text: '<?= $_SESSION['swal_error']; ?>',
+  confirmButtonText: 'OK'
+});
+</script>
+<?php unset($_SESSION['swal_error']); endif; ?>
+
+<?php if (isset($_SESSION['swal_success'])): ?>
+<script>
+Swal.fire({
+  icon: 'success',
+  title: 'Berhasil',
+  text: '<?= $_SESSION['swal_success']; ?>',
+  confirmButtonText: 'OK'
+});
+</script>
+<?php unset($_SESSION['swal_success']); endif; ?>
+
+<?php if (isset($_SESSION['swal_error'])): ?>
+<script>
+Swal.fire({
+  icon: 'error',
+  title: 'Gagal',
+  text: '<?= $_SESSION['swal_error']; ?>',
+  confirmButtonText: 'OK'
+});
+</script>
+<?php unset($_SESSION['swal_error']); endif; ?>
+
 
 </body>
 </html>

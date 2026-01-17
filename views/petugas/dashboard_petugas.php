@@ -65,3 +65,17 @@ ob_start();
 $content = ob_get_clean();
 include_once __DIR__ . '/../layout/layout.php';
 ?>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<?php if (isset($_SESSION['swal_success'])): ?>
+<script>
+  Swal.fire({
+    icon: 'success',
+    title: 'Login Berhasil',
+    text: '<?= $_SESSION['swal_success']; ?>',
+    timer: 2000,
+    showConfirmButton: false
+  });
+</script>
+<?php unset($_SESSION['swal_success']); endif; ?>

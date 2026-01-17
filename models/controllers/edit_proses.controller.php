@@ -21,9 +21,17 @@ if (isset($_POST['edit_data'])) {
     mysqli_query($conn, $sql_proses);
 
     mysqli_commit($conn);
-    echo "<script>alert('Data diedit!'); window.location='/UNIBI_WISUDA/views/petugas/kelola_mahasiswa.php';</script>";
+    // 🔥 SWEETALERT SUCCESS
+    $_SESSION['swal_success'] = "Data mahasiswa berhasil diperbarui.";
+
+    header("Location: /UNIBI_WISUDA/views/petugas/kelola_mahasiswa.php");
+    exit;
   } catch (Exception $e) {
     mysqli_rollback($conn);
-    echo "<script>alert('Gagal update data!'); window.history.back();</script>";
+    // 🔥 SWEETALERT ERROR
+    $_SESSION['swal_error'] = "Gagal memperbarui data mahasiswa.";
+
+    header("Location: /UNIBI_WISUDA/views/petugas/kelola_mahasiswa.php");
+    exit;
   }
 }

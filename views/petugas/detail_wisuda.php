@@ -68,11 +68,42 @@ ob_start();
     <span class="close" onclick="closeDetailModal()">&times;</span>
 
     <h3>Detail Wisudawan</h3>
-    <p><b>Nama:</b> <span id="m_nama"></span></p>
-    <p><b>NIM:</b> <span id="m_nim"></span></p>
-    <p><b>Pendamping 1:</b> <span id="m_p1"></span></p>
-    <p><b>Pendamping 2:</b> <span id="m_p2"></span></p>
-    <p><b>No Kursi:</b> <span id="m_kursi"></span></p>
+    <div class="detail-row">
+  <span class="label">Nama</span>
+  <span class="colon">:</span>
+  <span id="m_nama"></span>
+</div>
+
+<div class="detail-row">
+  <span class="label">NIM</span>
+  <span class="colon">:</span>
+  <span id="m_nim"></span>
+</div>
+
+<div class="detail-row">
+  <span class="label">Pendamping 1</span>
+  <span class="colon">:</span>
+  <span id="m_p1"></span>
+</div>
+
+<div class="detail-row">
+  <span class="label">Pendamping 2</span>
+  <span class="colon">:</span>
+  <span id="m_p2"></span>
+</div>
+
+<div class="detail-row">
+  <span class="label">No Kursi</span>
+  <span class="colon">:</span>
+  <span id="m_kursi"></span>
+</div>
+
+<div class="detail-row">
+  <span class="label">Qr Code</span>
+  <span class="colon">:</span>
+  
+</div>
+
 
     <div class="qr-box">
       <img id="m_qr" alt="QR Code" src="">

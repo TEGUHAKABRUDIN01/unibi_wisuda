@@ -1,0 +1,94 @@
+/* ===== WRAPPER UTAMA ===== */
+.main {
+    background-color: #2e6477; /* warna biru background seperti gambar */
+    box-sizing: border-box;
+}
+
+/* ===== CARD DASHBOARD ===== */
+.card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 30px 40px;
+    max-width: 900px;
+    margin: 0 auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== JUDUL ===== */
+.card h2 {
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #000;
+}
+
+/* ===== TABLE ===== */
+.card table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+/* HEADER TABLE */
+.card table thead {
+    background-color: #2e6477;
+    color: #fff;
+}
+
+.card table thead th {
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* BODY TABLE */
+.card table tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    color: #333;
+}
+
+/* ROW HOVER */
+.card table tbody tr:hover {
+    background-color: #f5f9fb;
+}
+
+/* ===== BUTTON / ACTION ===== */
+.btn-unduh {
+    display: inline-block;
+    padding: 8px 14px;
+    background-color: #2e6477;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    transition: background 0.3s ease;
+}
+
+.btn-unduh:hover {
+    background-color: #1f4b5a;
+}
+
+/* ===== BADGE STATUS ===== */
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge.pending {
+    background-color: #ffe0b2;
+    color: #b26a00;
+}
+
+/* ===== TEXT KOSONG ===== */
+.empty-text {
+    margin-top: 20px;
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}

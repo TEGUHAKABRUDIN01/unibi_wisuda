@@ -1,0 +1,167 @@
+.form-container {
+  width: 480px;
+  background: #fff;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.form-container h2 {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.form-group input[readonly] {
+  background: #f1f3f5;
+}
+
+/* INPUT FOCUS */
+.form-group input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.15);
+}
+
+/* HR */
+hr {
+  border: none;
+  height: 1px;
+  background: #eee;
+  margin: 25px 0;
+}
+
+.btn-simpan {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-simpan:hover {
+  background: #1d4ed8;
+}
+
+.note {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+}
+
+.page-wrapper {
+  display: flex;
+  justify-content: center;   /* TENGAH HORIZONTAL */
+  align-items: stretch;      /* TINGGI SAMA */
+  gap: 30px;
+  max-width: 900px;
+  margin: 60px auto;         /* TENGAH HALAMAN */
+}
+
+/* CARD PREVIEW */
+.preview-card {
+  width: 480px;
+  background: #fff;
+  padding: 30px 20px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* ISI TENGAH */
+  align-items: center;
+}
+
+.preview-card h3 {
+  margin-bottom: 15px;
+}
+
+
+/* EMPTY STATE */
+.empty-preview {
+  height: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #999;
+  font-size: 14px;
+  border: 2px dashed #ddd;
+  border-radius: 10px;
+}
+
+/* BARCODE */
+.barcode-box img {
+  width: 200px;
+  margin: 15px 0;
+}
+
+.barcode-text {
+  font-size: 13px;
+  color: #555;
+}
+
+.empty-preview {
+  width: 100%;
+  height: 220px;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.barcode-box img {
+  width: 200px;
+  margin: 10px 0;
+}
+
+.barcode-text {
+  font-size: 13px;
+  color: #555;
+  text-align: center;
+}
+
+.barcode-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;   /* Jarak antar QR */
+  margin-top: 20px;
+  flex-wrap: wrap; /* Supaya QR bisa wrap jika layar sempit */
+}
+
+.barcode-box h4 {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.barcode-box img {
+  width: 180px;  /* Ukuran QR */
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
