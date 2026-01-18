@@ -1,33 +1,42 @@
 <?php
-include_once __DIR__ . '/../../config/config.php';
 session_start();
+include_once __DIR__ . '/../../config/config.php';
 
-if (isset($_POST['login_mahasiswa'])) {
-  $identifier = mysqli_real_escape_string($conn, trim($_POST['nim']));
-  $password   = mysqli_real_escape_string($conn, trim($_POST['password']));
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  $nim = mysqli_real_escape_string($conn, $_POST['nim']);
+  $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-  // --- LOGIKA KHUSUS MAHASISWA ---
-  $cek_mhs = mysqli_query($conn, "SELECT * FROM mahasiswa WHERE nim = '$identifier'");
-  $data = mysqli_fetch_assoc($cek_mhs);
+  // 1. Cari data mahasiswa berdasarkan NIM dan Password (Teks Biasa)
+  $query = "SELECT m.*, p.status_proses 
+              FROM mahasiswa m 
+              LEFT JOIN proses_wisuda p ON m.id_mahasiswa = p.id_mahasiswa 
+              WHERE m.nim = '$nim' AND m.password = '$password'";
 
-  if (!$data) {
-    echo "<script>alert('Login Gagal: NIM Mahasiswa tidak terdaftar! Silahkan registrasi terlebih dahulu.'); window.history.back();</script>";
-    exit;
+  $result = mysqli_query($conn, $query);
+  $data = mysqli_fetch_assoc($result);
+
+  if (mysqli_num_rows($result) > 0) {
+    // 2. CEK STATUS ACC DARI ADMIN
+    // Admin memberikan ACC lewat tombol konfirmasi yang merubah status menjadi 'selesai'
+    if ($data['status_proses'] == 'proses') {
+      echo "<script>
+                alert('Akun Anda belum dikonfirmasi oleh Admin.');
+                window.location='/UNIBI_WISUDA/index.php';
+            </script>";
+      exit;
+    }
+
+    // 3. Jika status sudah 'selesai' (Sudah di-ACC), buat session
+    $_SESSION['id_mahasiswa'] = $data['id_mahasiswa'];
+    $_SESSION['nama'] = $data['nama_mahasiswa'];
+    $_SESSION['role'] = $data['role'];
+
+    header("Location: /UNIBI_WISUDA/views/mahasiswa/dashboard.php");
+  } else {
+    // Jika NIM atau Password salah
+    echo "<script>
+            alert('NIM atau Password salah!');
+            window.location='login.php';
+        </script>";
   }
-
-  if ($data['password'] !== $password) {
-    echo "<script>alert('Login Gagal: Password Mahasiswa salah!'); window.history.back();</script>";
-    exit;
-  }
-
-  if ($data['id_akses'] == 0) {
-    echo "<script>alert('Login Gagal: Akun Mahasiswa belum di-ACC oleh Petugas.'); window.history.back();</script>";
-    exit;
-  }
-
-  // Login Berhasil Mahasiswa
-  $_SESSION['id_mahasiswa'] = $data['id_mahasiswa'];
-  $_SESSION['nama']    = $data['nama_mahasiswa'];
-  $_SESSION['role']    = 'mahasiswa';
-  echo "<script>alert('Selamat Datang Mahasiswa!'); window.location='/UNIBI_WISUDA/views/mahasiswa/dashboard_mahasiswa.php';</script>";
 }
