@@ -1,89 +1,63 @@
 <?php
 session_start();
-
-$title = "Dashboard Mahasiswa";
-
 include_once __DIR__ . '/../../config/config.php';
-
-<<<<<<< HEAD
-=======
 ob_start();
 
-// 1. Cek apakah user sudah login
->>>>>>> c711997b8b4299ff192f03c1a44f562392e9295b
-if (!isset($_SESSION['id_mahasiswa'])) {
-  echo "<script>alert('Sesi berakhir');location='../../index.php';</script>";
+/* ===============================
+   1. AUTH & ROLE CHECK
+================================ */
+if (
+  !isset($_SESSION['id_mahasiswa']) ||
+  !isset($_SESSION['role']) ||
+  $_SESSION['role'] !== 'mahasiswa'
+) {
+  header("Location: ../../index.php");
   exit;
 }
 
 $id_mahasiswa = $_SESSION['id_mahasiswa'];
 
-<<<<<<< HEAD
+/* ===============================
+   2. AMBIL DATA MAHASISWA
+================================ */
 $sql = "
-SELECT m.nim, m.nama_mahasiswa, pr.nama_prodi, p.status_proses
-FROM mahasiswa m
-JOIN prodi pr ON m.id_prodi = pr.id_prodi
-LEFT JOIN proses_wisuda p ON m.id_mahasiswa = p.id_mahasiswa
-WHERE m.id_mahasiswa = ?
-";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id_mahasiswa);
-$stmt->execute();
-$data = $stmt->get_result()->fetch_assoc();
-=======
-// 2. Ambil data mahasiswa dengan JOIN ke prodi
-$sql = "
-SELECT 
+  SELECT 
     m.nim,
     m.nama_mahasiswa,
     pr.nama_prodi,
     p.status_proses,
-    d.nama_pendamping,
-    d.nama_pendamping
-FROM mahasiswa m
-JOIN prodi pr ON m.id_prodi = pr.id_prodi
-LEFT JOIN proses_wisuda p ON m.id_mahasiswa = p.id_mahasiswa
-LEFT JOIN pendamping d ON m.id_mahasiswa = d.id_mahasiswa
-WHERE m.id_mahasiswa = '$id_mahasiswa'
+    p.id_proses,
+    (SELECT COUNT(*) FROM pendamping WHERE id_mahasiswa = m.id_mahasiswa) as jml_pendamping -- Lebih akurat untuk cek pendamping
+  FROM mahasiswa m
+  JOIN prodi pr ON m.id_prodi = pr.id_prodi
+  LEFT JOIN proses_wisuda p ON m.id_mahasiswa = p.id_mahasiswa
+  WHERE m.id_mahasiswa = ?
+  LIMIT 1
 ";
 
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id_mahasiswa);
+$stmt->execute();
+$data = $stmt->get_result()->fetch_assoc();
 
-$query = mysqli_query($conn, $sql);
-$data = mysqli_fetch_assoc($query);
-$pendamping_ada = !empty($data['nama_pendamping']);
-
-
-// 3. Validasi jika data tidak ditemukan agar tidak error Offset on Null
 if (!$data) {
-  die("Error: Data profil mahasiswa tidak ditemukan di database.");
+  die("Data mahasiswa tidak ditemukan.");
 }
->>>>>>> c711997b8b4299ff192f03c1a44f562392e9295b
+
+// Cek apakah pendamping sudah diisi
+$pendamping_ada = ($data['jml_pendamping'] > 0);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 
 <head>
   <meta charset="UTF-8">
   <title>Dashboard Mahasiswa</title>
-  <style>
-    .btn-unduh {
-      background: #28a745;
-      color: #fff;
-      padding: 8px 15px;
-      border: 0;
-      border-radius: 4px
-    }
-
-    .status-badge {
-      color: #777;
-      font-style: italic
-    }
-  </style>
 </head>
 
-<<<<<<< HEAD
-<body>
+<body class="dashboard-page">
+
   <h3>Dashboard Mahasiswa</h3>
 
   <table border="1" cellpadding="10">
@@ -98,8 +72,10 @@ if (!$data) {
       <td><?= htmlspecialchars($data['nama_mahasiswa']) ?></td>
       <td><?= htmlspecialchars($data['nama_prodi']) ?></td>
       <td>
-        <?php if (isset($data['status_proses']) && $data['status_proses'] === 'selesai'): ?>
-          <a href="../../models/controllers/generate_kartu.controller.php" class="btn-unduh" target="_blank">
+        <?php if ($data['status_proses'] === 'selesai' && !empty($data['id_proses'])): ?>
+          <a href="../../models/controllers/generate_kartu.controller.php?id_proses=<?php echo $data['id_proses']; ?>"
+            class="btn-unduh"
+            target="_blank">
             UNDUH PDF
           </a>
         <?php endif; ?>
@@ -107,91 +83,18 @@ if (!$data) {
     </tr>
   </table>
 
+  <br>
   <a href="form_pendamping.php">Form Pendamping</a>
-=======
-<body class="dashboard-page">
-
-
-<div class="main">
-  <div class="card">
-  <h2>Dashboard</h2>
 
   <?php if ($pendamping_ada): ?>
-
-    <table>
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>NIM</th>
-          <th>Nama</th>
-          <th>Program Studi</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td><?= htmlspecialchars($data['nim']); ?></td>
-          <td><?= htmlspecialchars($data['nama_mahasiswa']); ?></td>
-          <td><?= htmlspecialchars($data['nama_prodi']); ?></td>
-          <td>
-            <?php if ($data['status_proses'] === 'selesai'): ?>
-              <a href="../../models/controllers/generate_kartu.controller.php"
-                 class="btn-unduh"
-                 target="_blank">
-                Unduh PDF
-              </a>
-            <?php else: ?>
-              <span class="badge pending">Menunggu Konfirmasi</span>
-            <?php endif; ?>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
+    <p><em>Data pendamping sudah diisi.</em></p>
   <?php endif; ?>
-</div>
 
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-function logout(e) {
-  e.preventDefault();
-  Swal.fire({
-    title: 'Logout?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Logout',
-    cancelButtonText: 'Batal'
-  }).then((r) => {
-    if (r.isConfirmed) {
-      window.location.href =
-        '/UNIBI_WISUDA/models/controllers/logout.controller.php';
-    }
-  });
-}
-</script>
->>>>>>> c711997b8b4299ff192f03c1a44f562392e9295b
-
-  <script>
-    function unduhSemuaTiket() {
-      const urls = [
-        "../../models/controllers/generate_kartu.controller.php?type=mahasiswa",
-        "../../models/controllers/generate_kartu.controller.php?type=pendamping"
-      ];
-      urls.forEach((url, i) => {
-        setTimeout(() => window.open(url, '_blank'), i * 1200);
-      });
-    }
-  </script>
 </body>
-
 
 </html>
 
 <?php
-// 4. Simpan konten ke variabel $content dan panggil layout
 $content = ob_get_clean();
 include_once __DIR__ . '/../layout/layout.php';
 ?>

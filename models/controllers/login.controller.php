@@ -29,9 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // 3. Jika status sudah 'selesai' (Sudah di-ACC), buat session
     $_SESSION['id_mahasiswa'] = $data['id_mahasiswa'];
     $_SESSION['nama'] = $data['nama_mahasiswa'];
-    $_SESSION['role'] = $data['role'];
+    $_SESSION['role'] = 'mahasiswa';
 
-    header("Location: /UNIBI_WISUDA/views/mahasiswa/dashboard.php");
+    header("Location: /UNIBI_WISUDA/views/mahasiswa/dashboard_mahasiswa.php");
   } else {
     // Jika NIM atau Password salah
     echo "<script>

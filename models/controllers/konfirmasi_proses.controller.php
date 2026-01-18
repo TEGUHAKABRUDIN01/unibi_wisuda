@@ -22,7 +22,7 @@ $id_petugas = $_SESSION['id_petugas'];
    Ambil data mahasiswa & prodi
 ================================ */
 $sql_mhs = "
-  SELECT m.nim, m.id_mahasiswa, pr.nama_prodi
+  SELECT m.nim, m.id_mahasiswa, pr.nama_prodi, p.id_pendamping
   FROM proses_wisuda p
   JOIN mahasiswa m ON p.id_mahasiswa = m.id_mahasiswa
   JOIN prodi pr ON m.id_prodi = pr.id_prodi
@@ -56,14 +56,40 @@ $prefix = match (true) {
 };
 
 /* ===============================
-   NOMOR KURSI
+   NOMOR KURSI MAHASISWA
 ================================ */
-$q_urut = mysqli_query($conn, "SELECT COUNT(*) total FROM kursi WHERE no_kursi LIKE '$prefix-%'");
-$row    = mysqli_fetch_assoc($q_urut);
-$no_kursi = $prefix . "-" . str_pad($row['total'] + 1, 3, "0", STR_PAD_LEFT);
+$q_urut_mhs = mysqli_query($conn, "SELECT COUNT(*) total FROM kursi WHERE no_kursi LIKE '$prefix-%'");
+$row_mhs    = mysqli_fetch_assoc($q_urut_mhs);
+$no_kursi   = $prefix . "-" . str_pad($row_mhs['total'] + 1, 3, "0", STR_PAD_LEFT);
 
 /* ===============================
-   GENERATE QR
+   LOGIKA PENDAMPING (1 Barcode, 2 Kursi)
+================================ */
+$no_kursi_p1 = null;
+$no_kursi_p2 = null;
+$base64_qr_pendamping = null;
+
+// Cek apakah mahasiswa sudah mengisi form pendamping
+$q_cek_pnd = mysqli_query($conn, "SELECT * FROM pendamping WHERE id_mahasiswa = '$id_mahasiswa'");
+if (mysqli_num_rows($q_cek_pnd) > 0) {
+  // 1. Tentukan nomor urut kursi pendamping (Dimulai dari 1 dan seterusnya)
+  $q_urut_pnd = mysqli_query($conn, "SELECT COUNT(no_kursi_p1) as total FROM kursi WHERE no_kursi_p1 IS NOT NULL");
+  $row_pnd    = mysqli_fetch_assoc($q_urut_pnd);
+  $next_pnd   = $row_pnd['total'] + 1;
+
+  // Kursi P1 (Ayah) dan P2 (Ibu)
+  $no_kursi_p1 = "P1-" . $prefix . "-" . str_pad($next_pnd, 3, "0", STR_PAD_LEFT);
+  $no_kursi_p2 = "P2-" . $prefix . "-" . str_pad($next_pnd + 1, 3, "0", STR_PAD_LEFT);
+
+  // 2. Generate SATU Barcode Khusus Pendamping (untuk berdua)
+  ob_start();
+  QRcode::png("PND-" . $nim, null, QR_ECLEVEL_L, 5, 2);
+  $qr_pnd_image = ob_get_clean();
+  $base64_qr_pendamping = 'data:image/png;base64,' . base64_encode($qr_pnd_image);
+}
+
+/* ===============================
+   GENERATE QR MAHASISWA
 ================================ */
 ob_start();
 QRcode::png($nim, null, QR_ECLEVEL_L, 5, 2);
@@ -76,35 +102,41 @@ $base64_qr = 'data:image/png;base64,' . base64_encode($qr_image);
 mysqli_begin_transaction($conn);
 
 try {
-
+  // Update Status Proses
   mysqli_query($conn, "
-    UPDATE proses_wisuda 
-    SET status_proses = 'selesai', id_petugas = '$id_petugas'
-    WHERE id_proses = '$id_proses'
-  ");
+        UPDATE proses_wisuda 
+        SET status_proses = 'selesai', id_petugas = '$id_petugas'
+        WHERE id_proses = '$id_proses'
+    ");
 
+  // Beri Akses Mahasiswa
   mysqli_query($conn, "
-    UPDATE mahasiswa 
-    SET id_akses = 1 
-    WHERE id_mahasiswa = '$id_mahasiswa'
-  ");
+        UPDATE mahasiswa 
+        SET id_akses = 1 
+        WHERE id_mahasiswa = '$id_mahasiswa'
+    ");
 
+  // Simpan/Update Barcode (Mhs & Pendamping)
   mysqli_query($conn, "
-    INSERT INTO barcode (id_proses, barcode_file)
-    VALUES ('$id_proses', '$base64_qr')
-    ON DUPLICATE KEY UPDATE barcode_file = '$base64_qr'
-  ");
+        INSERT INTO barcode (id_proses, barcode_file, barcode_pendamping)
+        VALUES ('$id_proses', '$base64_qr', '$base64_qr_pendamping')
+        ON DUPLICATE KEY UPDATE 
+            barcode_file = '$base64_qr', 
+            barcode_pendamping = '$base64_qr_pendamping'
+    ");
 
+  // Simpan/Update Kursi (Mhs, P1, P2)
   mysqli_query($conn, "
-    INSERT INTO kursi (id_proses, no_kursi)
-    VALUES ('$id_proses', '$no_kursi')
-    ON DUPLICATE KEY UPDATE no_kursi = '$no_kursi'
-  ");
+        INSERT INTO kursi (id_proses, no_kursi, no_kursi_p1, no_kursi_p2)
+        VALUES ('$id_proses', '$no_kursi', '$no_kursi_p1', '$no_kursi_p2')
+        ON DUPLICATE KEY UPDATE 
+            no_kursi = '$no_kursi', 
+            no_kursi_p1 = '$no_kursi_p1', 
+            no_kursi_p2 = '$no_kursi_p2'
+    ");
 
   mysqli_commit($conn);
-
-  $_SESSION['swal_success'] = 'Wisuda berhasil dikonfirmasi. Kursi & QR Code telah dibuat.';
-
+  $_SESSION['swal_success'] = 'Konfirmasi berhasil! Kursi & QR Code (Mhs & Pendamping) telah dibuat.';
 } catch (Exception $e) {
   mysqli_rollback($conn);
   $_SESSION['swal_error'] = 'Gagal konfirmasi wisuda!';
