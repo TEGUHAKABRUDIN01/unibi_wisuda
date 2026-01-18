@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,13 +9,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wisuda Unibi</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+  <link rel="stylesheet" href="../../style/login-style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="login-page">
 
-  <div class="login-container">
+  <?php if (isset($_SESSION['swal'])): ?>
+<script>
+Swal.fire({
+  icon: "<?= $_SESSION['swal']['icon'] ?>",
+  title: "<?= $_SESSION['swal']['title'] ?>",
+  text: "<?= $_SESSION['swal']['text'] ?>",
+  confirmButtonText: "OK"
+});
+</script>
+<?php unset($_SESSION['swal']); endif; ?>
 
+  <div class="login-container">
     <div class="left-card">
+          <img src="../../uploads/logo.png" alt="Logo UNIBI" />
       <h2>UNIBI</h2>
       <p>"Be The Young Entrepreneur"</p>
       <span>Happy Graduation</span>
@@ -20,6 +41,10 @@
     <div class="right-card">
       <h3>MASUK</h3>
 
+      <div class="login-switch">
+      <button type="button" class="switch-btn active">Mahasiswa</button>
+      <a href="/UNIBI_WISUDA/views/petugas/login_petugas.php" class="switch-btn">Petugas</a>
+    </div>
 
       <form action="/UNIBI_WISUDA/models/controllers/login.controller.php" method="POST">
         <input type="text" name="nim" placeholder="Masukkan NIM" required>
@@ -33,6 +58,12 @@
   </div>
 
 </body>
-
-
 </html>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+

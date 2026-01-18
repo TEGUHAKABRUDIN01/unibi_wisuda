@@ -10,12 +10,12 @@
   --card-shadow: rgba(0,0,0,0.05);
 
   --icon-bg-blue: #cfd4ff;
-  --icon-color-blue: #1B43F5;
-  --icon-color-red: #FF0000;
+  --icon-color-blue: #5977ff;
+  --icon-color-red: #ff4a4a;
   --icon-color-green: #4AF51B;
 
   --icon-color-red-hover: #e03131;
-  --icon-color-blue-hover: #bfc6ff;
+  --icon-color-blue-hover: #4256ed;
   --icon-color-green-hover: #4AF51B;
 
 
@@ -44,17 +44,37 @@ body.dashboard-page {
   color: var(--icon-color-blue);
 }
 
-/* SIDEBAR */
 .sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 300px;
-  height: 100vh;
+  min-height: 100vh;
   background: var(--primary);
   color: white;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  z-index: 1000;
+    overflow-y: auto;   /* 🔥 INI KUNCINYA */
 }
+.main {
+  margin-left: 300px;     /* dorong konten */
+  padding: 24px;
+  min-height: 100vh;
+  background: #f5f6fa;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.sidebar-header img {
+  width: 120px;      /* atur sesuai kebutuhan */
+  height: auto;
+}
+
 
 .sidebar img {
   width: 150px;
@@ -245,6 +265,70 @@ body.dashboard-page {
   }
 }
 
-/* ==============================
-            MAHASISWA
-================================ */
+/* =========================
+   GLOBAL RESPONSIVE
+========================= */
+
+/* TABLET */
+@media (max-width: 992px) {
+  .sidebar {
+    width: 220px;
+  }
+
+  .main {
+    margin-left: 220px;
+  }
+
+  .navbar {
+    width: calc(100% - 220px);
+  }
+
+  .cards {
+    flex-wrap: wrap;
+  }
+
+  .card {
+    width: 100%;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 576px) {
+  body.dashboard-page {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    position: relative;
+    width: 100%;
+    min-height: auto;
+    height: auto;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .main {
+    margin-left: 0;       /* 🔥 RESET */
+    padding: 15px;
+  }
+
+  .sidebar img {
+    display: none;
+  }
+
+  .sidebar-link {
+    flex: 1;
+    justify-content: center;
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .navbar {
+    width: 100%;
+    left: 0;
+  }
+
+  .main {
+    padding: 15px;
+  }
+}

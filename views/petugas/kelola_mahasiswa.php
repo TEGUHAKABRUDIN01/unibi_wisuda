@@ -88,3 +88,4 @@ $content = ob_get_clean();
 // panggil layout
 include_once __DIR__ . '/../layout/layout.php';
 
+?>

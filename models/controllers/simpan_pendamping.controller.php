@@ -102,7 +102,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     mysqli_commit($conn);
-    echo "<script>alert('Data pendamping & Barcode berhasil diperbarui!'); window.location='../../views/mahasiswa/dashboard_mahasiswa.php';</script>";
+$_SESSION['swal'] = [
+  'icon'  => 'success',
+  'title' => 'Berhasil',
+  'text'  => 'Data pendamping & barcode berhasil disimpan.'
+];
+
+header("Location: ../../views/mahasiswa/dashboard_mahasiswa.php");
+exit;
+
   } catch (Exception $e) {
     mysqli_rollback($conn);
     echo "Gagal: " . $e->getMessage();

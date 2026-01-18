@@ -64,7 +64,9 @@ function isActive($page) {
 </nav>
 
 <div class="sidebar">
+      <div class="sidebar-header">
     <img src="/UNIBI_WISUDA/uploads/logo.png" class="logo">
+    </div>
 
     <?php if ($_SESSION['role'] === 'petugas'): ?>
         <a href="/UNIBI_WISUDA/views/petugas/dashboard_petugas.php" class="sidebar-link <?= isActive('dashboard_petugas.php') ?>">
@@ -112,12 +114,11 @@ function isActive($page) {
     });
 </script>
 
-
+<!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/UNIBI_WISUDA/script/index.js"></script>
 
-
-
+<!-- NOTIF KONFIRMASI SUCCES -->
 <?php if (isset($_SESSION['swal_success'])): ?>
 <script>
 Swal.fire({
@@ -129,19 +130,7 @@ Swal.fire({
 </script>
 <?php unset($_SESSION['swal_success']); endif; ?>
 
-<?php if (isset($_SESSION['swal_error'])): ?>
-<script>
-Swal.fire({
-  icon: 'error',
-  title: 'Gagal',
-  text: '<?= $_SESSION['swal_error']; ?>',
-  confirmButtonText: 'OK'
-});
-</script>
-<?php unset($_SESSION['swal_error']); endif; ?>
-
-
-
+<!-- NOTIF HAPUS WISUDAWAN -->
 <script>
 function hapusWisuda(id) {
   Swal.fire({
@@ -162,8 +151,7 @@ function hapusWisuda(id) {
 }
 </script>
 
- 
-
+<!-- NOTIF KONFIRMASI WISUDAWAN -->
 <script>
 function konfirmasiWisuda(id) {
   Swal.fire({
@@ -184,50 +172,24 @@ function konfirmasiWisuda(id) {
 }
 </script>
 
-<?php if (isset($_SESSION['swal_success'])): ?>
+<!-- NOTIF LOGIN MHS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<?php if (isset($_SESSION['swal'])): ?>
 <script>
 Swal.fire({
-  icon: 'success',
-  title: 'Berhasil',
-  text: '<?= $_SESSION['swal_success']; ?>',
-  confirmButtonText: 'OK'
+  icon: '<?= $_SESSION['swal']['icon'] ?>',
+  title: '<?= $_SESSION['swal']['title'] ?>',
+  text: '<?= $_SESSION['swal']['text'] ?>'
 });
 </script>
-<?php unset($_SESSION['swal_success']); endif; ?>
+<?php unset($_SESSION['swal']); endif; ?>
 
-<?php if (isset($_SESSION['swal_error'])): ?>
-<script>
-Swal.fire({
-  icon: 'error',
-  title: 'Gagal',
-  text: '<?= $_SESSION['swal_error']; ?>',
-  confirmButtonText: 'OK'
-});
-</script>
-<?php unset($_SESSION['swal_error']); endif; ?>
 
-<?php if (isset($_SESSION['swal_success'])): ?>
-<script>
-Swal.fire({
-  icon: 'success',
-  title: 'Berhasil',
-  text: '<?= $_SESSION['swal_success']; ?>',
-  confirmButtonText: 'OK'
-});
-</script>
-<?php unset($_SESSION['swal_success']); endif; ?>
-
-<?php if (isset($_SESSION['swal_error'])): ?>
-<script>
-Swal.fire({
-  icon: 'error',
-  title: 'Gagal',
-  text: '<?= $_SESSION['swal_error']; ?>',
-  confirmButtonText: 'OK'
-});
-</script>
-<?php unset($_SESSION['swal_error']); endif; ?>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<?php include_once __DIR__ . '/swal.php'; ?>
+</body>
 
 </body>
 </html>
+

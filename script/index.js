@@ -19,14 +19,16 @@ function konfirmasiHapus(id) {
   });
 }
 
-
-
+/* =========================
+   HAPUS DATA WISUDA
+========================= */
 function logout() {
   Swal.fire({
     title: 'Logout?',
     text: 'Anda akan keluar dari sistem',
     icon: 'warning',
     showCancelButton: true,
+    confirmButtonColor: '#d33',
     confirmButtonText: 'Logout',
     cancelButtonText: 'Batal'
   }).then((result) => {

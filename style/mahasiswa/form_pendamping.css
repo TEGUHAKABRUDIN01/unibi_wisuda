@@ -165,3 +165,38 @@ hr {
   display: block;
   margin: 0 auto;
 }
+
+/* =========================
+   RESPONSIVE FORM PENDAMPING
+========================= */
+
+/* TABLET */
+@media (max-width: 992px) {
+  .page-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .form-container,
+  .preview-card {
+    width: 100%;
+    max-width: 500px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 576px) {
+  .form-container,
+  .preview-card {
+    padding: 20px;
+  }
+
+  .barcode-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .barcode-box img {
+    width: 150px;
+  }
+}

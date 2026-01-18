@@ -56,109 +56,95 @@ if ($row = mysqli_fetch_assoc($qBarcode)) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="id">
+<div class="page-wrapper">
 
-<head>
-  <meta charset="UTF-8">
-  <title>Form Pendamping Wisuda</title>
-</head>
+  <!-- FORM PENDAMPING -->
+  <div class="form-container">
 
-<body>
+    <?php if (!$pendamping_ada): ?>
 
-  <div class="page-wrapper">
+      <h2>Data Pendamping Wisuda</h2>
 
-    <!-- ===============================
-     FORM PENDAMPING
-================================ -->
-    <div class="form-container">
+      <form action="../../models/controllers/simpan_pendamping.controller.php" method="POST">
 
-      <?php if (!$pendamping_ada): ?>
-
-        <h2>Data Pendamping Wisuda</h2>
-
-        <form action="../../models/controllers/simpan_pendamping.controller.php" method="POST">
-
-          <div>
-            <label>NIM</label>
-            <input type="text" value="<?= htmlspecialchars($mhs['nim']) ?>" readonly>
-          </div>
-
-          <div>
-            <label>Nama Mahasiswa</label>
-            <input type="text" value="<?= htmlspecialchars($mhs['nama_mahasiswa']) ?>" readonly>
-          </div>
-
-          <hr>
-
-          <div>
-            <label>Nama Orang Tua 1 (Ayah/Wali)</label>
-            <input type="text" name="nama_ayah" required>
-          </div>
-
-          <div>
-            <label>Nama Orang Tua 2 (Ibu/Wali)</label>
-            <input type="text" name="nama_ibu" required>
-          </div>
-
-          <button type="submit">Simpan Pendamping</button>
-
-        </form>
-
-      <?php else: ?>
-
-        <h2>Data Pendamping</h2>
-        <p style="color:green;font-weight:bold;">✅ Data pendamping sudah diisi</p>
-        <p>Silakan cek kartu wisuda di bawah.</p>
-
-      <?php endif; ?>
-
-    </div>
-
-    <!-- ===============================
-     PREVIEW KARTU
-================================ -->
-    <div class="preview-card">
-
-      <?php if ($pendamping_ada): ?>
-
-        <h3>Kartu Wisuda</h3>
-
-        <div class="barcode-container">
-
-          <?php if ($qr_mahasiswa): ?>
-            <div class="barcode-box">
-              <h4>QR Mahasiswa</h4>
-              <img src="<?= $qr_mahasiswa ?>" alt="QR Mahasiswa">
-            </div>
-          <?php endif; ?>
-
-          <?php if ($qr_pendamping): ?>
-            <div class="barcode-box">
-              <h4>QR Pendamping</h4>
-              <img src="<?= $qr_pendamping ?>" alt="QR Pendamping">
-            </div>
-          <?php endif; ?>
-
+        <div class="form-group">
+          <label>NIM</label>
+          <input type="text" value="<?= htmlspecialchars($mhs['nim']) ?>" readonly>
         </div>
 
-        <p><em>QR Pendamping berlaku untuk 2 orang tua</em></p>
+        <div class="form-group">
+          <label>Nama Mahasiswa</label>
+          <input type="text" value="<?= htmlspecialchars($mhs['nama_mahasiswa']) ?>" readonly>
+        </div>
 
-      <?php else: ?>
+        <hr>
 
-        <p>Barcode akan muncul setelah data pendamping diisi.</p>
+        <div class="form-group">
+          <label>Nama Orang Tua 1 (Ayah/Wali)</label>
+          <input type="text" name="nama_ayah" required>
+        </div>
 
-      <?php endif; ?>
+        <div class="form-group">
+          <label>Nama Orang Tua 2 (Ibu/Wali)</label>
+          <input type="text" name="nama_ibu" required>
+        </div>
 
-    </div>
+        <button type="submit" class="btn-simpan">Simpan Pendamping</button>
+        <p class="note">Pastikan semua data sudah benar sebelum disimpan.</p>
+
+      </form>
+
+    <?php else: ?>
+
+      <h2>Data Pendamping</h2>
+      <p class="note" style="color:green;font-weight:bold;">✅ Data pendamping sudah diisi</p>
+      <p class="note">Silakan cek kartu wisuda menu dashboard</p>
+
+    <?php endif; ?>
 
   </div>
 
-</body>
+  <!-- PREVIEW KARTU WISUDA -->
+  <div class="preview-card">
 
-</html>
+    <?php if ($pendamping_ada): ?>
+
+      <h3>Kartu Wisuda</h3>
+
+      <div class="barcode-container">
+
+        <?php if ($qr_mahasiswa): ?>
+          <div class="barcode-box">
+            <h4>QR Mahasiswa</h4>
+            <img src="<?= $qr_mahasiswa ?>" alt="QR Mahasiswa">
+          </div>
+        <?php endif; ?>
+
+        <?php if ($qr_pendamping): ?>
+          <div class="barcode-box">
+            <h4>QR Pendamping</h4>
+            <img src="<?= $qr_pendamping ?>" alt="QR Pendamping">
+          </div>
+        <?php endif; ?>
+
+      </div>
+
+      <p class="note"><em>QR Pendamping berlaku untuk 2 orang tua</em></p>
+
+    <?php else: ?>
+
+      <div class="empty-preview">
+        Barcode akan muncul setelah data pendamping diisi.
+      </div>
+
+    <?php endif; ?>
+
+  </div>
+
+</div>
 
 <?php
 $content = ob_get_clean();
+$title = "Form Pendamping";
 include_once __DIR__ . '/../layout/layout.php';
 ?>

@@ -47,6 +47,8 @@ session_start();
   </div>
 </html>
 
+
+<!-- LOGIN PETUGAS SALAH - akun tidak ditemukan -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <?php if (isset($_SESSION['swal_error'])): ?>

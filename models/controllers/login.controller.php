@@ -6,37 +6,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $nim = mysqli_real_escape_string($conn, $_POST['nim']);
   $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-  // 1. Cari data mahasiswa berdasarkan NIM dan Password (Teks Biasa)
   $query = "SELECT m.*, p.status_proses 
-              FROM mahasiswa m 
-              LEFT JOIN proses_wisuda p ON m.id_mahasiswa = p.id_mahasiswa 
-              WHERE m.nim = '$nim' AND m.password = '$password'";
+            FROM mahasiswa m 
+            LEFT JOIN proses_wisuda p ON m.id_mahasiswa = p.id_mahasiswa 
+            WHERE m.nim = '$nim' AND m.password = '$password'";
 
   $result = mysqli_query($conn, $query);
-  $data = mysqli_fetch_assoc($result);
 
   if (mysqli_num_rows($result) > 0) {
-    // 2. CEK STATUS ACC DARI ADMIN
-    // Admin memberikan ACC lewat tombol konfirmasi yang merubah status menjadi 'selesai'
+    $data = mysqli_fetch_assoc($result);
+
     if ($data['status_proses'] == 'proses') {
-      echo "<script>
-                alert('Akun Anda belum dikonfirmasi oleh Admin.');
-                window.location='/UNIBI_WISUDA/index.php';
-            </script>";
+      $_SESSION['swal'] = [
+        'icon'  => 'warning',
+        'title' => 'Belum Dikonfirmasi',
+        'text'  => 'Akun Anda belum dikonfirmasi oleh Admin.'
+      ];
+        header("Location: /UNIBI_WISUDA/views/mahasiswa/login_mahasiswa.php");
       exit;
     }
 
-    // 3. Jika status sudah 'selesai' (Sudah di-ACC), buat session
+    // ✅ LOGIN BERHASIL
     $_SESSION['id_mahasiswa'] = $data['id_mahasiswa'];
     $_SESSION['nama'] = $data['nama_mahasiswa'];
     $_SESSION['role'] = 'mahasiswa';
 
+    $_SESSION['swal'] = [
+      'icon'  => 'success',
+      'title' => 'Login Berhasil',
+      'text'  => 'Selamat datang, ' . $data['nama_mahasiswa']
+    ];
+
     header("Location: /UNIBI_WISUDA/views/mahasiswa/dashboard_mahasiswa.php");
+    exit;
+
   } else {
-    // Jika NIM atau Password salah
-    echo "<script>
-            alert('NIM atau Password salah!');
-            window.location='login.php';
-        </script>";
+    $_SESSION['swal'] = [
+      'icon'  => 'error',
+      'title' => 'Login Gagal',
+      'text'  => 'NIM atau Password salah!'
+    ];
+    header("Location: /UNIBI_WISUDA/index.php");
+    exit;
   }
 }

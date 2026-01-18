@@ -105,7 +105,7 @@ tbody tr:hover {
 
 /* BUTTON */
 .btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 6px;
@@ -220,13 +220,15 @@ tbody tr:hover {
 
 /* ===== BUTTONS ===== */
 .btn {
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 14px;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
+      padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    width: 90px;
+    margin: 5px;
 }
 
 .btn-primary {
@@ -389,5 +391,27 @@ tbody tr:hover {
 
   .modal-content p b {
     min-width: unset;
+  }
+}
+
+/* =========================
+   RESPONSIVE TABLE ADMIN
+========================= */
+
+@media (max-width: 768px) {
+  table {
+    font-size: 12px;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
   }
 }

@@ -70,9 +70,15 @@ try {
 
   mysqli_commit($conn);
 
-  $_SESSION['swal_success'] = "Registrasi Berhasil! Akun Anda non-aktif sementara sampai diverifikasi oleh petugas.";
-  header("Location: /unibi_wisuda/index.php");
-  exit;
+$_SESSION['swal'] = [
+  'icon'  => 'success',
+  'title' => 'Registrasi Berhasil',
+  'text'  => 'Berhasil daftar, tunggu admin konfirmasi.'
+];
+
+header("Location: /UNIBI_WISUDA/views/mahasiswa/login_mahasiswa.php");
+exit;
+
 } catch (Exception $e) {
   mysqli_rollback($conn);
   $_SESSION['swal_error'] = "Terjadi kesalahan: " . mysqli_error($conn);
