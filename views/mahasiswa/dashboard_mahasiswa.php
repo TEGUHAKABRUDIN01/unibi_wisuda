@@ -70,15 +70,24 @@ $pendamping_ada = ($data['jml_pendamping'] > 0);
             <td><?= htmlspecialchars($data['nama_mahasiswa']) ?></td>
             <td><?= htmlspecialchars($data['nama_prodi']) ?></td>
             <td>
-              <?php if ($data['status_proses'] === 'selesai' && !empty($data['id_proses'])
-                && $pendamping_ada): ?>
-                <a href="../../models/controllers/generate_kartu.controller.php?id_proses=<?= $data['id_proses']; ?>"
-                   class="btn-unduh"
-                   target="_blank">
-                   UNDUH PDF
-                </a>
+              <?php if ($data['status_proses'] === 'selesai' && !empty($data['id_proses']) && $pendamping_ada): ?>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                  <a href="../../models/controllers/generate_kartu.controller.php?id_proses=<?= $data['id_proses']; ?>&tipe=mhs"
+                    class="btn-unduh"
+                    target="_blank"
+                    style="background-color: #28a745; text-align: center;">
+                    UNDUH KARTU MHS
+                  </a>
+
+                  <a href="../../models/controllers/generate_kartu.controller.php?id_proses=<?= $data['id_proses']; ?>&tipe=pnd"
+                    class="btn-unduh"
+                    target="_blank"
+                    style="background-color: #17a2b8; text-align: center;">
+                    UNDUH KARTU PENDAMPING
+                  </a>
+                </div>
               <?php else: ?>
-                <span class="badge pending">Belum selesai</span>
+                <span class="badge pending">Belum tersedia</span>
               <?php endif; ?>
             </td>
           </tr>

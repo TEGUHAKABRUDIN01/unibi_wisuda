@@ -10,9 +10,10 @@ if (!isset($_GET['id_proses']) || empty($_GET['id_proses'])) {
     die("Error: ID Proses tidak ditemukan.");
 }
 
+// Ambil parameter id_proses dan tipe (mhs atau pnd)
 $id_proses = mysqli_real_escape_string($conn, $_GET['id_proses']);
+$tipe = isset($_GET['tipe']) ? $_GET['tipe'] : 'mhs';
 
-// Query dengan LEFT JOIN agar fakultas/prodi tidak menggagalkan hasil jika ada data kosong
 $query = "SELECT m.nama_mahasiswa, m.nim, f.nama_fakultas, pr.nama_prodi, 
                  k.no_kursi, k.no_kursi_p1, k.no_kursi_p2,
                  b.barcode_file, b.barcode_pendamping,
@@ -37,24 +38,26 @@ $cek_hadir = mysqli_query($conn, "SELECT status_kehadiran FROM detail_wisuda WHE
 $h = mysqli_fetch_assoc($cek_hadir);
 $status_teks = ($h) ? $h['status_kehadiran'] : "BELUM HADIR";
 
+// Style CSS tetap sama
+$style = '
+<style>
+    body { font-family: sans-serif; font-size: 12px; }
+    .card { border: 2px solid #333; padding: 15px; border-radius: 10px; }
+    .header { text-align: center; font-weight: bold; font-size: 14px; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 15px; }
+    table { width: 100%; border-collapse: collapse; }
+    td { vertical-align: top; padding: 3px 0; }
+    .label { width: 130px; font-weight: bold; }
+    .barcode-section { text-align: center; margin-top: 15px; }
+    .barcode-img { width: 120px; height: 120px; }
+    .status-box { font-weight: bold; color: #d9534f; border: 1px solid #d9534f; padding: 2px 5px; display: inline-block; }
+</style>';
 
-$html = '
-<html>
-<head>
-    <style>
-        body { font-family: sans-serif; font-size: 12px; }
-        .card { border: 2px solid #333; padding: 15px; margin-bottom: 20px; border-radius: 10px; }
-        .header { text-align: center; font-weight: bold; font-size: 14px; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 15px; }
-        table { width: 100%; border-collapse: collapse; }
-        td { vertical-align: top; padding: 3px 0; }
-        .label { width: 130px; font-weight: bold; }
-        .barcode-section { text-align: center; margin-top: 15px; }
-        .barcode-img { width: 120px; height: 120px; }
-        .status-box { font-weight: bold; color: #d9534f; border: 1px solid #d9534f; padding: 2px 5px; display: inline-block; }
-    </style>
-</head>
-<body>
+$html = '<html><head>' . $style . '</head><body>';
 
+// LOGIKA PEMISAHAN KONTEN
+if ($tipe === 'mhs') {
+    // TAMPILKAN HANYA KARTU MAHASISWA
+    $html .= '
     <div class="card">
         <div class="header">KARTU PESERTA WISUDA (MAHASISWA)</div>
         <table>
@@ -63,16 +66,15 @@ $html = '
             <tr><td class="label">Fakultas</td><td>: ' . htmlspecialchars($data['nama_fakultas'] ?? '-') . '</td></tr>
             <tr><td class="label">Prodi</td><td>: ' . htmlspecialchars($data['nama_prodi']) . '</td></tr>
             <tr><td class="label">No. Kursi</td><td>: <strong style="font-size: 16px;">' . ($data['no_kursi'] ?? '-') . '</strong></td></tr>
-            <tr><td class="label">Kehadiran</td><td>: <span class="status-box">' . $status_teks . '</span></td></tr>
         </table>
         <div class="barcode-section">
             <img src="' . $data['barcode_file'] . '" class="barcode-img"><br>
             <strong>' . $data['nim'] . '</strong>
         </div>
     </div>';
-
-// HANYA TAMPILKAN KARTU PENDAMPING JIKA ADA DATA BARCODE PENDAMPING
-if (!empty($data['barcode_pendamping'])) {
+    $filename = "Kartu_Mahasiswa_" . $data['nim'];
+} else {
+    // TAMPILKAN HANYA KARTU PENDAMPING
     $html .= '
     <div class="card">
         <div class="header">KARTU PENDAMPING WISUDA (ORANG TUA)</div>
@@ -80,9 +82,8 @@ if (!empty($data['barcode_pendamping'])) {
             <tr><td class="label">Nama Mahasiswa</td><td>: ' . htmlspecialchars($data['nama_mahasiswa']) . '</td></tr>
             <tr><td class="label">Fakultas</td><td>: ' . htmlspecialchars($data['nama_fakultas'] ?? '-') . '</td></tr>
             <tr><td class="label">Prodi</td><td>: ' . htmlspecialchars($data['nama_prodi']) . '</td></tr>
-            <tr><td class="label">Kursi Pendamping 1</td><td>: <strong>' . ($data['no_kursi_p1'] ?? '-') . '</strong></td></tr>
-            <tr><td class="label">Kursi Pendamping 2</td><td>: <strong>' . ($data['no_kursi_p2'] ?? '-') . '</strong></td></tr>
-            <tr><td class="label">Kehadiran</td><td>: <span class="status-box">' . $status_teks . '</span></td></tr>
+            <tr><td class="label">Kursi P1</td><td>: <strong>' . ($data['no_kursi_p1'] ?? '-') . '</strong></td></tr>
+            <tr><td class="label">Kursi P2</td><td>: <strong>' . ($data['no_kursi_p2'] ?? '-') . '</strong></td></tr>
         </table>
         <div class="barcode-section">
             <img src="' . $data['barcode_pendamping'] . '" class="barcode-img"><br>
@@ -90,6 +91,7 @@ if (!empty($data['barcode_pendamping'])) {
             <p style="font-size: 9px; margin-top: 5px;">* 1 Barcode berlaku untuk 2 orang pendamping</p>
         </div>
     </div>';
+    $filename = "Kartu_Pendamping_" . $data['nim'];
 }
 
 $html .= '</body></html>';
@@ -100,8 +102,8 @@ $options->set('isRemoteEnabled', true);
 
 $dompdf = new Dompdf($options);
 $dompdf->loadHtml($html);
-$dompdf->setPaper('A4', 'portrait');
+$dompdf->setPaper('A5', 'portrait'); // Menggunakan A5 karena kartu tunggal lebih kecil
 $dompdf->render();
 
-$dompdf->stream("Kartu_Wisuda_" . $data['nim'] . ".pdf", ["Attachment" => 1]);
+$dompdf->stream($filename . ".pdf", ["Attachment" => 1]);
 exit;
