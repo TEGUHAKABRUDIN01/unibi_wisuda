@@ -70,7 +70,7 @@ try {
 
   mysqli_commit($conn);
 
-$_SESSION['swal'] = [
+$_SESSION['swal_konfirmasi'] = [
   'icon'  => 'success',
   'title' => 'Registrasi Berhasil',
   'text'  => 'Berhasil daftar, tunggu admin konfirmasi.'

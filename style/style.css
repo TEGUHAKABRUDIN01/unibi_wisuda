@@ -54,7 +54,7 @@ body.dashboard-page {
   color: white;
   padding: 20px;
   z-index: 1000;
-    overflow-y: auto;   /* 🔥 INI KUNCINYA */
+  overflow-y: auto;   /* 🔥 INI KUNCINYA */
 }
 .main {
   margin-left: 300px;     /* dorong konten */

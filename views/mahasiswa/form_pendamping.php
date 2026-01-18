@@ -59,9 +59,11 @@ if ($row = mysqli_fetch_assoc($qBarcode)) {
 <div class="page-wrapper">
 
   <!-- FORM PENDAMPING -->
-  <div class="form-container">
+  <div class="page-wrapper">
 
-    <?php if (!$pendamping_ada): ?>
+  <?php if (!$pendamping_ada): ?>
+    <!-- ================= FORM PENDAMPING ================= -->
+    <div class="form-container">
 
       <h2>Data Pendamping Wisuda</h2>
 
@@ -93,21 +95,11 @@ if ($row = mysqli_fetch_assoc($qBarcode)) {
         <p class="note">Pastikan semua data sudah benar sebelum disimpan.</p>
 
       </form>
+    </div>
 
-    <?php else: ?>
-
-      <h2>Data Pendamping</h2>
-      <p class="note" style="color:green;font-weight:bold;">✅ Data pendamping sudah diisi</p>
-      <p class="note">Silakan cek kartu wisuda menu dashboard</p>
-
-    <?php endif; ?>
-
-  </div>
-
-  <!-- PREVIEW KARTU WISUDA -->
-  <div class="preview-card">
-
-    <?php if ($pendamping_ada): ?>
+  <?php else: ?>
+    <!-- ================= KARTU WISUDA SAJA ================= -->
+    <div class="preview-card full">
 
       <h3>Kartu Wisuda</h3>
 
@@ -131,17 +123,11 @@ if ($row = mysqli_fetch_assoc($qBarcode)) {
 
       <p class="note"><em>QR Pendamping berlaku untuk 2 orang tua</em></p>
 
-    <?php else: ?>
-
-      <div class="empty-preview">
-        Barcode akan muncul setelah data pendamping diisi.
-      </div>
-
-    <?php endif; ?>
-
-  </div>
+    </div>
+  <?php endif; ?>
 
 </div>
+
 
 <?php
 $content = ob_get_clean();

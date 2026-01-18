@@ -10,14 +10,24 @@ if (isset($_POST['login_petugas'])) {
   $cek_ptg = mysqli_query($conn, "SELECT * FROM petugas WHERE nama_petugas='$identifier'");
   $data_ptg = mysqli_fetch_assoc($cek_ptg);
 
+  // ❌ AKUN TIDAK DITEMUKAN
   if (!$data_ptg) {
-    $_SESSION['swal_error'] = 'Akun petugas tidak ditemukan!';
+    $_SESSION['swal_petugas'] = [
+      'icon'  => 'error',
+      'title' => 'Login Gagal',
+      'text'  => 'Akun petugas tidak ditemukan!'
+    ];
     header("Location: /UNIBI_WISUDA/views/petugas/login_petugas.php");
     exit;
   }
 
+  // ❌ PASSWORD SALAH
   if ($data_ptg['password'] !== $password) {
-    $_SESSION['swal_error'] = 'Password petugas salah!';
+    $_SESSION['swal_petugas'] = [
+      'icon'  => 'error',
+      'title' => 'Login Gagal',
+      'text'  => 'Password petugas salah!'
+    ];
     header("Location: /UNIBI_WISUDA/views/petugas/login_petugas.php");
     exit;
   }
@@ -27,7 +37,11 @@ if (isset($_POST['login_petugas'])) {
   $_SESSION['nama']      = $data_ptg['nama_petugas'];
   $_SESSION['role']      = 'petugas';
 
-  $_SESSION['swal_success'] = 'Selamat datang, '.$data_ptg['nama_petugas'];
+  $_SESSION['swal_success'] = [
+    'icon'  => 'success',
+    'title' => 'Login Berhasil',
+    'text'  => 'Selamat datang, ' . $data_ptg['nama_petugas']
+  ];
 
   header("Location: /UNIBI_WISUDA/views/petugas/dashboard_petugas.php");
   exit;

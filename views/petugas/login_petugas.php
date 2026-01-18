@@ -1,5 +1,7 @@
 <?php
 session_start();
+unset($_SESSION['swal_mhs']);
+unset($_SESSION['swal_konfirmasi']);
 ?>
 
 <!DOCTYPE html>
@@ -12,6 +14,19 @@ session_start();
 </head>
 
 <body class="login-page">
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<?php if (isset($_SESSION['swal_petugas'])): ?>
+<script>
+Swal.fire({
+  icon: "<?= $_SESSION['swal_petugas']['icon']; ?>",
+  title: "<?= $_SESSION['swal_petugas']['title']; ?>",
+  text: "<?= $_SESSION['swal_petugas']['text']; ?>"
+});
+</script>
+<?php unset($_SESSION['swal_petugas']); endif; ?>
+
 
   <div class="login-container">
     <div class="left-card">
@@ -51,12 +66,12 @@ session_start();
 <!-- LOGIN PETUGAS SALAH - akun tidak ditemukan -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<?php if (isset($_SESSION['swal_error'])): ?>
+<?php if (isset($_SESSION['swal_petugas'])): ?>
 <script>
   Swal.fire({
     icon: 'error',
     title: 'Login Gagal',
-    text: '<?= $_SESSION['swal_error']; ?>'
+    text: '<?= $_SESSION['swal_petugas']; ?>'
   });
 </script>
-<?php unset($_SESSION['swal_error']); endif; ?>
+<?php unset($_SESSION['swal_petugas']); endif; ?>

@@ -76,7 +76,7 @@ function isActive($page) {
             <i class="fas fa-users"></i> Kelola Mahasiswa
         </a>
         <a href="/UNIBI_WISUDA/views/petugas/detail_wisuda.php" class="sidebar-link <?= isActive('detail_wisuda.php') ?>">
-            <i class="fas fa-graduation-cap"></i> Detail Wisuda
+            <i class="fas fa-graduation-cap"></i> Detail Wisudawan
         </a>
     <?php endif; ?>
 

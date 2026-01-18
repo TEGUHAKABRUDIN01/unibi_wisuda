@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $data = mysqli_fetch_assoc($result);
 
     if ($data['status_proses'] == 'proses') {
-      $_SESSION['swal'] = [
+      $_SESSION['swal_konfirmasi'] = [
         'icon'  => 'warning',
         'title' => 'Belum Dikonfirmasi',
         'text'  => 'Akun Anda belum dikonfirmasi oleh Admin.'
@@ -41,12 +41,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     exit;
 
   } else {
-    $_SESSION['swal'] = [
+    $_SESSION['swal_mhs'] = [
       'icon'  => 'error',
       'title' => 'Login Gagal',
-      'text'  => 'NIM atau Password salah!'
+      'text'  => 'Mahasiswa belum terdaftar'
     ];
-    header("Location: /UNIBI_WISUDA/index.php");
+    header("Location: /UNIBI_WISUDA/views/mahasiswa/login_mahasiswa.php");
     exit;
   }
 }
