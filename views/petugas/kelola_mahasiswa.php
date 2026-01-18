@@ -55,16 +55,22 @@ ob_start();
           </td>
           <td>
             <?php if ($data['status_proses'] === 'proses') : ?>
-              <a href="../../models/controllers/konfirmasi_proses.controller.php?id_proses=<?= $data['id_proses']; ?>"
-                class="btn-konfirmasi"
-                onclick="return confirm('Konfirmasi pendaftaran mahasiswa ini?')">
+              <!-- <a href="
+              ../../models/controllers/konfirmasi_proses.controller.php?id_proses=<?= $data['id_proses']; ?>" -->
+
+              <a href="#"
+                class="btn btn-konfirmasi"
+                onclick="konfirmasiWisuda(<?= $data['id_proses']; ?>)">
                 Konfirmasi
               </a>
             <?php else : ?>
               <a href="edit_wisuda.php?id=<?= $data['id_proses']; ?>" class="btn btn-edit">Edit</a>
-              <a href="../../models/controllers/hapus_wisuda.controller.php?id_proses=<?= $data['id_proses']; ?>"
-                class="btn-hapus"
-                onclick="return confirm('Apakah Anda yakin ingin menghapus data pendaftaran ini?')">
+              
+              <!-- <a href="../../models/controllers/hapus_wisuda.controller.php?id_proses=<?= $data['id_proses']; ?>" -->
+
+              <a href="#"
+                class="btn btn-hapus"
+                onclick="hapusWisuda(<?= $data['id_proses']; ?>)">
                 Hapus
               </a>
             <?php endif; ?>
@@ -81,3 +87,4 @@ $content = ob_get_clean();
 
 // panggil layout
 include_once __DIR__ . '/../layout/layout.php';
+

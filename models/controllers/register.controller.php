@@ -2,80 +2,80 @@
 include_once __DIR__ . '/../../config/config.php';
 session_start();
 
-if (isset($_POST['register_mahasiswa'])) {
+if (!isset($_POST['register_mahasiswa'])) {
+  header("Location: /unibi_wisuda/views/mahasiswa/dashboard_mahasiswa.php");
 
-  // validasi input kosong
-  $nama     = trim($_POST['nama']);
-  $nim      = trim($_POST['nim']);
-  $password = trim($_POST['password']);
-  $id_prodi = $_POST['id_prodi'];
+  exit;
+}
 
-  if (empty($nama) || empty($nim) || empty($password) || empty($id_prodi) || empty($_FILES['sk_wisuda']['name'])) {
-    echo "<script>alert('SEMUA FORM WAJIB DIISI!!'); window.history.back();</script>";
-    exit;
-  }
+// Ambil input
+$nama     = trim($_POST['nama']);
+$nim      = trim($_POST['nim']);
+$password = trim($_POST['password']);
+$id_prodi = $_POST['id_prodi'];
+$file     = $_FILES['sk_wisuda'];
 
-  // 2. valid file tipe pdf dan ukuran max 5 mb
-  $file_name = $_FILES['sk_wisuda']['name'];
-  $file_size = $_FILES['sk_wisuda']['size'];
-  $file_tmp  = $_FILES['sk_wisuda']['tmp_name'];
-  $file_ext  = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+// Validasi sederhana
+if (empty($nama) || empty($nim) || empty($password) || empty($id_prodi) || empty($file['name'])) {
+  $_SESSION['swal_error'] = "SEMUA FORM WAJIB DIISI!";
+  header("Location: " . $_SERVER['HTTP_REFERER']);
+  exit;
+}
 
-  if ($file_ext !== 'pdf') {
-    echo "<script>alert('FORMAT FILE HARUS PDF!!!'); window.history.back();</script>";
-    exit;
-  }
+// Validasi file PDF & ukuran
+$file_ext  = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+$file_size = $file['size'];
+$file_tmp  = $file['tmp_name'];
 
-  if ($file_size > 5 * 1024 * 1024) {
-    echo "<script>alert('Ukuran file terlalu besar (Maksimal 5MB)!'); window.history.back();</script>";
-    exit;
-  }
+if ($file_ext !== 'pdf') {
+  $_SESSION['swal_error'] = "FORMAT FILE HARUS PDF!";
+  header("Location: " . $_SERVER['HTTP_REFERER']);
+  exit;
+}
 
-  // persiapan file ke binary
-  $nama     = mysqli_real_escape_string($conn, $nama);
-  $nim      = mysqli_real_escape_string($conn, $nim);
-  $password = mysqli_real_escape_string($conn, $password);
+if ($file_size > 5 * 1024 * 1024) {
+  $_SESSION['swal_error'] = "Ukuran file terlalu besar (Maksimal 5MB)!";
+  header("Location: " . $_SERVER['HTTP_REFERER']);
+  exit;
+}
 
-  // Membaca file menjadi data biner untuk disimpan di database (BLOB)
-  $file_sk = addslashes(file_get_contents($file_tmp));
+// Escape input
+$nama     = mysqli_real_escape_string($conn, $nama);
+$nim      = mysqli_real_escape_string($conn, $nim);
+$password = mysqli_real_escape_string($conn, $password);
+$file_sk  = addslashes(file_get_contents($file_tmp));
 
-  // cari id_fakultas otomatis
-  $query_prodi = mysqli_query($conn, "SELECT id_fakultas FROM prodi WHERE id_prodi = '$id_prodi'");
-  $data_prodi  = mysqli_fetch_assoc($query_prodi);
+// Ambil id_fakultas dari id_prodi
+$data_prodi = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id_fakultas FROM prodi WHERE id_prodi='$id_prodi'"));
+if (!$data_prodi) {
+  $_SESSION['swal_error'] = "Program Studi tidak ditemukan!";
+  header("Location: " . $_SERVER['HTTP_REFERER']);
+  exit;
+}
+$id_fakultas = $data_prodi['id_fakultas'];
+$id_akses    = 1;
 
-  if (!$data_prodi) {
-    echo "<script>alert('Program Studi tidak ditemukan!'); window.history.back();</script>";
-    exit;
-  }
+mysqli_begin_transaction($conn);
 
-  $id_fakultas = $data_prodi['id_fakultas'];
-  $id_akses    = 1;
+try {
+  // Insert mahasiswa
+  $sql_mhs = "INSERT INTO mahasiswa 
+                (id_prodi, id_fakultas, id_akses, nim, nama_mahasiswa, sk_wisuda, password)
+                VALUES ('$id_prodi', '$id_fakultas', '$id_akses', '$nim', '$nama', '$file_sk', '$password')";
+  mysqli_query($conn, $sql_mhs);
+  $id_mahasiswa = mysqli_insert_id($conn);
 
-  mysqli_begin_transaction($conn);
+  // Insert proses_wisuda
+  mysqli_query($conn, "INSERT INTO proses_wisuda (id_mahasiswa, status_proses) VALUES ('$id_mahasiswa', 'proses')");
 
-  try {
-    // Insert ke tabel mahasiswa (File masuk ke kolom sk_wisuda)
-    $sql_mhs = "INSERT INTO mahasiswa (id_prodi, id_fakultas, id_akses, nim, nama_mahasiswa, sk_wisuda, password) 
-                    VALUES ('$id_prodi', '$id_fakultas', '$id_akses', '$nim', '$nama', '$file_sk', '$password')";
-    mysqli_query($conn, $sql_mhs);
+  mysqli_commit($conn);
 
-    $id_mahasiswa = mysqli_insert_id($conn);
-
-    // Insert ke tabel proses_wisuda
-    $sql_proses = "INSERT INTO proses_wisuda (id_mahasiswa, status_proses) 
-                       VALUES ('$id_mahasiswa', 'proses')";
-    mysqli_query($conn, $sql_proses);
-
-    mysqli_commit($conn);
-
-    echo "<script>alert('Registrasi Berhasil! Akun Anda non-aktif sementara sampai diverifikasi oleh petugas.'); window.location='/unibi_wisuda/index.php';</script>";
-  } catch (Exception $e) {
-    mysqli_rollback($conn);
-    // Tampilkan pesan error asli dari database
-    echo "Detail Error: " . mysqli_error($conn) . " | " . $e->getMessage();
-    exit;
-  }
-} else {
+  $_SESSION['swal_success'] = "Registrasi Berhasil! Akun Anda non-aktif sementara sampai diverifikasi oleh petugas.";
   header("Location: /unibi_wisuda/index.php");
+  exit;
+} catch (Exception $e) {
+  mysqli_rollback($conn);
+  $_SESSION['swal_error'] = "Terjadi kesalahan: " . mysqli_error($conn);
+  header("Location: " . $_SERVER['HTTP_REFERER']);
   exit;
 }
