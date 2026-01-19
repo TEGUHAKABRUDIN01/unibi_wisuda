@@ -6,27 +6,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $nim = mysqli_real_escape_string($conn, $_POST['nim']);
   $password = mysqli_real_escape_string($conn, $_POST['password']);
 
-  // // 1. Cek apakah NIM hanya mengandung angka
-  // if (!ctype_digit($nim)) {
-  //   $_SESSION['swal_mhs'] = [
-  //     'icon'  => 'error',
-  //     'title' => 'Input Tidak Valid',
-  //     'text'  => 'NIM tidak boleh mengandung huruf atau simbol!'
-  //   ];
-  //   header("Location: /UNIBI_WISUDA/views/mahasiswa/login_mahasiswa.php");
-  //   exit;
-  // }
-
-  // // 2. Cek apakah panjang NIM > 9 karakter
-  // if (strlen($nim) !== 9) {
-  //   $_SESSION['swal_mhs'] = [
-  //     'icon'  => 'error',
-  //     'title' => 'Input Tidak Valid',
-  //     'text'  => 'Panjang NIM tidak boleh lebih dari 9 digit angka!'
-  //   ];
-  //   header("Location: /UNIBI_WISUDA/views/mahasiswa/login_mahasiswa.php");
-  //   exit;
-  // }
 
   $query = "SELECT m.*, p.status_proses 
             FROM mahasiswa m 
