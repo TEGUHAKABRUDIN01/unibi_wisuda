@@ -16,28 +16,40 @@ $file     = $_FILES['sk_wisuda'];
 
 // 2. VALIDASI: Form tidak boleh kosong
 if (empty($nama) || empty($nim) || empty($password) || empty($id_prodi) || empty($file['name'])) {
-  $_SESSION['swal_error'] = "SEMUA FORM WAJIB DIISI!";
-  header("Location: " . $_SERVER['HTTP_REFERER']);
+  $_SESSION['swal_error'] = [
+    'icon'  => 'error',
+    'title' => 'Registrasi Gagal',
+    'text'  => 'Semua form wajib diisi!'
+  ];
+  header("Location: /UNIBI_WISUDA/views/mahasiswa/register.php");
   exit;
 }
+
 
 // 3. VALIDASI: NIM harus angka
 if (!ctype_digit($nim)) {
-  echo "<script>
-        alert('NIM HARUS BERISI ANGKA TIDAK BOLEH MENGANDUNG HURUF DAN SIMBOL!');
-        window.location.href = '" . $_SERVER['HTTP_REFERER'] . "';
-    </script>";
+  $_SESSION['swal_error'] = [
+    'icon'  => 'error',
+    'title' => 'Registrasi Gagal',
+    'text'  => 'NIM hanya boleh berisi angka!'
+  ];
+  header("Location: /UNIBI_WISUDA/views/mahasiswa/register.php");
   exit;
 }
 
+
+
 // 4. VALIDASI: Panjang NIM harus tepat 9 DIGIT
 if (strlen($nim) !== 9) {
-  echo "<script>
-        alert('PANJANG NIM TEPAT 9 DIGIT!');
-        window.location.href = '" . $_SERVER['HTTP_REFERER'] . "';
-    </script>";
+  $_SESSION['swal_error'] = [
+    'icon'  => 'error',
+    'title' => 'Registrasi Gagal',
+    'text'  => 'NIM harus terdiri dari 9 digit!'
+  ];
+  header("Location: /UNIBI_WISUDA/views/mahasiswa/register.php");
   exit;
 }
+
 
 // 5. VALIDASI: Cek apakah NIM sudah terdaftar (Penting agar tidak duplikat)
 $cek_nim_query = mysqli_query($conn, "SELECT nim FROM mahasiswa WHERE nim = '$nim'");

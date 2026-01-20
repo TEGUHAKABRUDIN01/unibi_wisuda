@@ -34,17 +34,17 @@ session_start();
 
       <div class="form-group">
         <label>Nama Lengkap</label>
-        <input type="text" name="nama" placeholder="Masukkan Nama Lengkap" required>
+        <input type="text" name="nama" placeholder="Masukkan Nama Lengkap">
       </div>
 
       <div class="form-group">
         <label>NIM</label>
-        <input type="text" name="nim" placeholder="Masukkan Nomor Induk Mahasiswa" required>
+        <input type="number" name="nim" placeholder="Masukkan Nomor Induk Mahasiswa" >
       </div>
 
       <div class="form-group">
         <label>Program Studi</label>
-        <select name="id_prodi" required>
+        <select name="id_prodi" >
           <option value="">-- Pilih Program Studi --</option>
           <?php
           $query = mysqli_query($conn, "SELECT id_prodi, nama_prodi FROM prodi ORDER BY nama_prodi ASC");
@@ -57,12 +57,12 @@ session_start();
 
       <div class="form-group">
         <label>Password</label>
-        <input type="password" name="password" placeholder="Masukkan Password" required>
+        <input type="password" name="password" placeholder="Masukkan Password" >
       </div>
 
       <div class="form-group">
         <label>Upload SK Lulus (PDF)</label>
-        <input type="file" name="sk_wisuda" accept=".pdf" required>
+        <input type="file" name="sk_wisuda" accept=".pdf" >
       </div>
 
       <button type="submit" name="register_mahasiswa">Daftar</button>
@@ -72,6 +72,29 @@ session_start();
   </div>
 
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+<?php if (isset($_SESSION['swal_error'])): ?>
+  Swal.fire({
+    icon: '<?= $_SESSION['swal_error']['icon']; ?>',
+    title: '<?= $_SESSION['swal_error']['title']; ?>',
+    text: '<?= $_SESSION['swal_error']['text']; ?>',
+    confirmButtonColor: '#d33'
+  });
+<?php unset($_SESSION['swal_error']); endif; ?>
+
+<?php if (isset($_SESSION['swal_konfirmasi'])): ?>
+  Swal.fire({
+    icon: '<?= $_SESSION['swal_konfirmasi']['icon']; ?>',
+    title: '<?= $_SESSION['swal_konfirmasi']['title']; ?>',
+    text: '<?= $_SESSION['swal_konfirmasi']['text']; ?>',
+    confirmButtonColor: '#188E69'
+  });
+<?php unset($_SESSION['swal_konfirmasi']); endif; ?>
+</script>
 
 </body>
 
