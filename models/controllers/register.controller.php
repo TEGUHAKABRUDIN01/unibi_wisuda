@@ -4,7 +4,7 @@ session_start();
 
 // Cek apakah diakses melalui tombol daftar
 if (!isset($_POST['register_mahasiswa'])) {
-  header("Location: /unibi_wisuda/views/mahasiswa/dashboard_mahasiswa.php");
+  header("Location: /UNIBI_WISUDA/views/mahasiswa/register.php");
   exit;
 }
 
@@ -15,17 +15,33 @@ $password = trim($_POST['password']);
 $id_prodi = $_POST['id_prodi'];
 $file     = $_FILES['sk_wisuda'];
 
+<<<<<<< HEAD
 // 2. VALIDASI DASAR: Form tidak boleh kosong
+=======
+// 2. Validasi dasar
+>>>>>>> 7844dcc01e460f720a1a7c5e48cac1b0287511f7
 if (empty($nama) || empty($nim) || empty($password) || empty($id_prodi) || empty($file['name'])) {
-  $_SESSION['swal_error'] = "SEMUA FORM WAJIB DIISI!";
-  header("Location: " . $_SERVER['HTTP_REFERER']);
+  $_SESSION['swal_error'] = [
+    'icon' => 'error',
+    'title' => 'Registrasi Gagal',
+    'text' => 'Semua form wajib diisi!'
+  ];
+  header("Location: /UNIBI_WISUDA/views/mahasiswa/register.php");
   exit;
 }
 
+<<<<<<< HEAD
 // 3. VALIDASI NIM: Harus angka & tepat 9 digit
+=======
+// 3. Validasi NIM
+>>>>>>> 7844dcc01e460f720a1a7c5e48cac1b0287511f7
 if (!ctype_digit($nim) || strlen($nim) !== 9) {
-  $_SESSION['swal_error'] = "NIM HARUS 9 DIGIT ANGKA!";
-  header("Location: " . $_SERVER['HTTP_REFERER']);
+  $_SESSION['swal_error'] = [
+    'icon' => 'error',
+    'title' => 'Registrasi Gagal',
+    'text' => 'NIM harus 9 digit angka!'
+  ];
+  header("Location: /UNIBI_WISUDA/views/mahasiswa/register.php");
   exit;
 }
 
@@ -41,8 +57,12 @@ if (mysqli_num_rows($cek_nim) > 0) {
 $file_ext  = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 $file_size = $file['size'];
 if ($file_ext !== 'pdf') {
-  $_SESSION['swal_error'] = "FORMAT FILE HARUS PDF!";
-  header("Location: " . $_SERVER['HTTP_REFERER']);
+  $_SESSION['swal_error'] = [
+    'icon' => 'error',
+    'title' => 'Registrasi Gagal',
+    'text' => 'Format file harus PDF!'
+  ];
+  header("Location: /UNIBI_WISUDA/views/mahasiswa/register.php");
   exit;
 }
 if ($file_size > 5 * 1024 * 1024) {
@@ -51,18 +71,35 @@ if ($file_size > 5 * 1024 * 1024) {
   exit;
 }
 
+<<<<<<< HEAD
 // 6. Persiapan Data (Escaping)
+=======
+// 5. Escape data
+>>>>>>> 7844dcc01e460f720a1a7c5e48cac1b0287511f7
 $nama     = mysqli_real_escape_string($conn, $nama);
 $nim      = mysqli_real_escape_string($conn, $nim);
 $password = mysqli_real_escape_string($conn, $password); // Disarankan password_hash jika sudah production
 $file_sk  = addslashes(file_get_contents($file['tmp_name']));
 
+<<<<<<< HEAD
 // 7. Ambil id_fakultas berdasarkan id_prodi
 $res_prodi = mysqli_query($conn, "SELECT id_fakultas FROM prodi WHERE id_prodi='$id_prodi'");
 $data_prodi = mysqli_fetch_assoc($res_prodi);
 if (!$data_prodi) {
   $_SESSION['swal_error'] = "PRODI TIDAK DITEMUKAN!";
   header("Location: " . $_SERVER['HTTP_REFERER']);
+=======
+// 6. Ambil id_fakultas
+$res_prodi = mysqli_query($conn, "SELECT id_fakultas FROM prodi WHERE id_prodi='$id_prodi'");
+$data_prodi = mysqli_fetch_assoc($res_prodi);
+if (!$data_prodi) {
+  $_SESSION['swal_error'] = [
+    'icon' => 'error',
+    'title' => 'Registrasi Gagal',
+    'text' => 'Program studi tidak ditemukan!'
+  ];
+  header("Location: /UNIBI_WISUDA/views/mahasiswa/register.php");
+>>>>>>> 7844dcc01e460f720a1a7c5e48cac1b0287511f7
   exit;
 }
 $id_fakultas = $data_prodi['id_fakultas'];
@@ -73,17 +110,27 @@ $id_fakultas = $data_prodi['id_fakultas'];
 mysqli_begin_transaction($conn);
 
 try {
+<<<<<<< HEAD
   // STEP 1: Insert ke tabel mahasiswa
   $sql_mhs = "INSERT INTO mahasiswa (id_prodi, id_fakultas, id_akses, nim, nama_mahasiswa, sk_wisuda, password)
                 VALUES ('$id_prodi', '$id_fakultas', '1', '$nim', '$nama', '$file_sk', '$password')";
   if (!mysqli_query($conn, $sql_mhs)) {
     throw new Exception("Gagal simpan data mahasiswa: " . mysqli_error($conn));
+=======
+  // 1. Simpan Data Mahasiswa
+  $sql_mhs = "INSERT INTO mahasiswa 
+              (id_prodi, id_fakultas, id_akses, nim, nama_mahasiswa, sk_wisuda, password)
+              VALUES ('$id_prodi', '$id_fakultas', '1', '$nim', '$nama', '$file_sk', '$password')";
+  if (!mysqli_query($conn, $sql_mhs)) {
+    throw new Exception("Error mahasiswa: " . mysqli_error($conn));
+>>>>>>> 7844dcc01e460f720a1a7c5e48cac1b0287511f7
   }
   $id_mahasiswa = mysqli_insert_id($conn);
 
   // STEP 2: Insert ke tabel proses_wisuda
   $sql_proses = "INSERT INTO proses_wisuda (id_mahasiswa, status_proses) VALUES ('$id_mahasiswa', 'proses')";
   if (!mysqli_query($conn, $sql_proses)) {
+<<<<<<< HEAD
     throw new Exception("Gagal buat proses wisuda: " . mysqli_error($conn));
   }
   $id_proses = mysqli_insert_id($conn);
@@ -97,19 +144,49 @@ try {
   }
 
   // JIKA SEMUA BERHASIL, BARU COMMIT
+=======
+    throw new Exception("Error proses_wisuda: " . mysqli_error($conn));
+  }
+  $id_proses = mysqli_insert_id($conn);
+
+  // 3. Shadowing ke Detail Wisuda (isi id_barcode & id_kursi dengan NULL)
+  $sql_detail = "INSERT INTO detail_wisuda (id_proses, id_barcode, id_kursi, status_kehadiran) 
+                 VALUES ('$id_proses', NULL, NULL, 'tidak hadir')";
+  if (!mysqli_query($conn, $sql_detail)) {
+    throw new Exception("Error detail_wisuda: " . mysqli_error($conn));
+  }
+
+  // ✅ Commit sekali saja
+>>>>>>> 7844dcc01e460f720a1a7c5e48cac1b0287511f7
   mysqli_commit($conn);
 
+  // ✅ Notifikasi sukses
   $_SESSION['swal_konfirmasi'] = [
     'icon'  => 'success',
+<<<<<<< HEAD
     'title' => 'Berhasil',
     'text'  => 'Registrasi berhasil, silakan tunggu konfirmasi admin.'
+=======
+    'title' => 'Registrasi Berhasil',
+    'text'  => 'Pendaftaran berhasil, silakan tunggu konfirmasi admin.'
+>>>>>>> 7844dcc01e460f720a1a7c5e48cac1b0287511f7
   ];
   header("Location: /UNIBI_WISUDA/views/mahasiswa/login_mahasiswa.php");
   exit;
+
 } catch (Exception $e) {
   // JIKA ADA SATU SAJA YANG GAGAL, BATALKAN SEMUA (ROLLBACK)
   mysqli_rollback($conn);
+<<<<<<< HEAD
   $_SESSION['swal_error'] = "Gagal Simpan: " . $e->getMessage();
   header("Location: " . $_SERVER['HTTP_REFERER']);
+=======
+  $_SESSION['swal_error'] = [
+    'icon' => 'error',
+    'title' => 'Registrasi Gagal',
+    'text' => $e->getMessage()
+  ];
+  header("Location: /UNIBI_WISUDA/views/mahasiswa/register.php");
+>>>>>>> 7844dcc01e460f720a1a7c5e48cac1b0287511f7
   exit;
 }

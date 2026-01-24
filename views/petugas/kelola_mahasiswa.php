@@ -8,7 +8,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'petugas') {
   exit;
 }
 
-$sql = "SELECT p.id_proses, m.nama_mahasiswa, m.nim, pr.nama_prodi, f.nama_fakultas, p.status_proses
+$sql = "SELECT p.id_proses, m.id_mahasiswa, m.nama_mahasiswa, m.nim, pr.nama_prodi, f.nama_fakultas, p.status_proses
         FROM proses_wisuda p
         JOIN mahasiswa m ON p.id_mahasiswa = m.id_mahasiswa
         JOIN prodi pr ON m.id_prodi = pr.id_prodi
@@ -37,6 +37,7 @@ ob_start();
         <th>Prodi</th>
         <th>Status</th>
         <th>Aksi</th>
+        <th>SK Kelulusan</th> 
       </tr>
     </thead>
     <tbody>
@@ -55,9 +56,6 @@ ob_start();
           </td>
           <td>
             <?php if ($data['status_proses'] === 'proses') : ?>
-              <!-- <a href="
-              ../../models/controllers/konfirmasi_proses.controller.php?id_proses=<?= $data['id_proses']; ?>" -->
-
               <a href="#"
                 class="btn btn-konfirmasi"
                 onclick="konfirmasiWisuda(<?= $data['id_proses']; ?>)">
@@ -65,15 +63,20 @@ ob_start();
               </a>
             <?php else : ?>
               <a href="edit_wisuda.php?id=<?= $data['id_proses']; ?>" class="btn btn-edit">Edit</a>
-              
-              <!-- <a href="../../models/controllers/hapus_wisuda.controller.php?id_proses=<?= $data['id_proses']; ?>" -->
-
               <a href="#"
                 class="btn btn-hapus"
                 onclick="hapusWisuda(<?= $data['id_proses']; ?>)">
                 Hapus
               </a>
             <?php endif; ?>
+          </td>
+          <td>
+            <!-- ✅ Tombol lihat SK selalu tampil -->
+            <a href="../../models/controllers/view_sk.controller.php?id_mahasiswa=<?= $data['id_mahasiswa']; ?>"
+               target="_blank"
+               class="btn btn-sk">
+               Lihat SK
+            </a>
           </td>
         </tr>
       <?php endwhile; ?>
@@ -87,5 +90,4 @@ $content = ob_get_clean();
 
 // panggil layout
 include_once __DIR__ . '/../layout/layout.php';
-
 ?>
