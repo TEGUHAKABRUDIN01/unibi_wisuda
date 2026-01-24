@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
-
 <body class="login-page">
 
 <div class="login-container">
@@ -39,6 +38,18 @@
   </div>
 
 </div>
+
+<script>
+  const passwordInput = document.getElementById('password');
+  const toggleIcon = document.getElementById('togglePassword');
+
+  toggleIcon.addEventListener('click', function () {
+    const isHidden = passwordInput.type === 'password';
+    passwordInput.type = isHidden ? 'text' : 'password';
+    this.classList.toggle('fa-eye');
+    this.classList.toggle('fa-eye-slash');
+  });
+</script>
 
 </body>
 </html>

@@ -1,0 +1,54 @@
+/* ===== PAGE BASE ===== */
+.dashboard-page {
+  background-color: #f4f6f9;
+}
+
+/* ===== JUDUL ===== */
+.scan-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* ===== CONTAINER ===== */
+.scan-container {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== QR READER ===== */
+#reader {
+  width: 100% !important;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* BORDER CAMERA */
+#reader video {
+  border-radius: 10px;
+}
+
+/* ===== INFO TEXT ===== */
+.scan-info {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .scan-container {
+    padding: 15px;
+  }
+
+  .scan-title {
+    font-size: 20px;
+  }
+}
