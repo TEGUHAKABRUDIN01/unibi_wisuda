@@ -102,21 +102,14 @@ $base64_qr = 'data:image/png;base64,' . base64_encode($qr_image);
 mysqli_begin_transaction($conn);
 
 try {
-  // Update Status Proses
+  // 1. Update Status di proses_wisuda
   mysqli_query($conn, "
         UPDATE proses_wisuda 
         SET status_proses = 'selesai', id_petugas = '$id_petugas'
         WHERE id_proses = '$id_proses'
     ");
 
-  // Beri Akses Mahasiswa
-  mysqli_query($conn, "
-        UPDATE mahasiswa 
-        SET id_akses = 1 
-        WHERE id_mahasiswa = '$id_mahasiswa'
-    ");
-
-  // Simpan/Update Barcode (Mhs & Pendamping)
+  // 2. Simpan/Update Barcode dan ambil ID-nya
   mysqli_query($conn, "
         INSERT INTO barcode (id_proses, barcode_file, barcode_pendamping)
         VALUES ('$id_proses', '$base64_qr', '$base64_qr_pendamping')
@@ -124,8 +117,11 @@ try {
             barcode_file = '$base64_qr', 
             barcode_pendamping = '$base64_qr_pendamping'
     ");
+  // Ambil ID Barcode (Gunakan query jika ON DUPLICATE KEY tidak mengembalikan insert_id yang baru)
+  $res_barcode = mysqli_query($conn, "SELECT id_barcode FROM barcode WHERE id_proses = '$id_proses'");
+  $id_barcode = mysqli_fetch_assoc($res_barcode)['id_barcode'];
 
-  // Simpan/Update Kursi (Mhs, P1, P2)
+  // 3. Simpan/Update Kursi dan ambil ID-nya
   mysqli_query($conn, "
         INSERT INTO kursi (id_proses, no_kursi, no_kursi_p1, no_kursi_p2)
         VALUES ('$id_proses', '$no_kursi', '$no_kursi_p1', '$no_kursi_p2')
@@ -134,7 +130,20 @@ try {
             no_kursi_p1 = '$no_kursi_p1', 
             no_kursi_p2 = '$no_kursi_p2'
     ");
+  $res_kursi = mysqli_query($conn, "SELECT id_kursi FROM kursi WHERE id_proses = '$id_proses'");
+  $id_kursi = mysqli_fetch_assoc($res_kursi)['id_kursi'];
 
+  // 4. STEP 2: Update tabel detail_wisuda (MENGISI YANG TADI NULL)
+  // Sekarang variabel $id_barcode dan $id_kursi sudah ada isinya
+  $sql_update_detail = "UPDATE detail_wisuda 
+                          SET id_barcode = '$id_barcode', 
+                              id_kursi   = '$id_kursi' 
+                          WHERE id_proses = '$id_proses'";
+
+  mysqli_query($conn, $sql_update_detail);
+
+  // 5. Beri Akses Login Mahasiswa (id_akses 1)
+  mysqli_query($conn, "UPDATE mahasiswa SET id_akses = 1 WHERE id_mahasiswa = '$id_mahasiswa'");
   mysqli_commit($conn);
   $_SESSION['swal_success'] = 'Konfirmasi berhasil! Kursi & QR Code (Mhs & Pendamping) telah dibuat.';
 } catch (Exception $e) {

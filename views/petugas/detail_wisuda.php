@@ -17,10 +17,12 @@ $sql = "SELECT
             WHERE id_mahasiswa = m.id_mahasiswa LIMIT 1 OFFSET 1) AS pendamping2,
           (SELECT no_kursi FROM kursi 
             WHERE id_proses = p.id_proses LIMIT 1) AS no_kursi,
-          b.barcode_file
+          b.barcode_file,
+          dw.status_kehadiran -- AMBIL STATUS DARI TABEL DETAIL_WISUDA
         FROM proses_wisuda p
         JOIN mahasiswa m ON p.id_mahasiswa = m.id_mahasiswa
         LEFT JOIN barcode b ON p.id_proses = b.id_proses
+        LEFT JOIN detail_wisuda dw ON p.id_proses = dw.id_proses -- JOIN KE DETAIL_WISUDA
         ORDER BY p.id_proses DESC";
 
 $query = mysqli_query($conn, $sql);
@@ -69,40 +71,46 @@ ob_start();
 
     <h3>Detail Wisudawan</h3>
     <div class="detail-row">
-  <span class="label">Nama</span>
-  <span class="colon">:</span>
-  <span id="m_nama"></span>
-</div>
+      <span class="label">Nama</span>
+      <span class="colon">:</span>
+      <span id="m_nama"></span>
+    </div>
 
-<div class="detail-row">
-  <span class="label">NIM</span>
-  <span class="colon">:</span>
-  <span id="m_nim"></span>
-</div>
+    <div class="detail-row">
+      <span class="label">NIM</span>
+      <span class="colon">:</span>
+      <span id="m_nim"></span>
+    </div>
 
-<div class="detail-row">
-  <span class="label">Pendamping 1</span>
-  <span class="colon">:</span>
-  <span id="m_p1"></span>
-</div>
+    <div class="detail-row">
+      <span class="label">Pendamping 1</span>
+      <span class="colon">:</span>
+      <span id="m_p1"></span>
+    </div>
 
-<div class="detail-row">
-  <span class="label">Pendamping 2</span>
-  <span class="colon">:</span>
-  <span id="m_p2"></span>
-</div>
+    <div class="detail-row">
+      <span class="label">Pendamping 2</span>
+      <span class="colon">:</span>
+      <span id="m_p2"></span>
+    </div>
 
-<div class="detail-row">
-  <span class="label">No Kursi</span>
-  <span class="colon">:</span>
-  <span id="m_kursi"></span>
-</div>
+    <div class="detail-row">
+      <span class="label">No Kursi</span>
+      <span class="colon">:</span>
+      <span id="m_kursi"></span>
+    </div>
 
-<div class="detail-row">
-  <span class="label">Qr Code</span>
-  <span class="colon">:</span>
-  
-</div>
+    <div class="detail-row">
+      <span class="label">Status Kehadiran</span>
+      <span class="colon">:</span>
+      <span id="m_status"></span>
+    </div>
+
+    <div class="detail-row">
+      <span class="label">Qr Code</span>
+      <span class="colon">:</span>
+
+    </div>
 
 
     <div class="qr-box">
