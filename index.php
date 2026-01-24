@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
-
 <body class="login-page">
 
 <div class="login-container">
@@ -31,7 +30,12 @@
 
     <form action="/UNIBI_WISUDA/models/controllers/login.controller.php" method="POST">
       <input type="text" name="nim" placeholder="Masukkan NIM" required>
-      <input type="password" name="password" placeholder="Masukkan Password" required>
+
+      <div class="password-wrapper">
+        <input type="password" id="password" name="password" placeholder="Masukkan Password" required>
+        <i class="fa-solid fa-eye toggle-icon" id="togglePassword"></i>
+      </div>
+
       <button type="submit" name="login_mahasiswa">Login</button>
     </form>
 
@@ -39,6 +43,18 @@
   </div>
 
 </div>
+
+<script>
+  const passwordInput = document.getElementById('password');
+  const toggleIcon = document.getElementById('togglePassword');
+
+  toggleIcon.addEventListener('click', function () {
+    const isHidden = passwordInput.type === 'password';
+    passwordInput.type = isHidden ? 'text' : 'password';
+    this.classList.toggle('fa-eye');
+    this.classList.toggle('fa-eye-slash');
+  });
+</script>
 
 </body>
 </html>

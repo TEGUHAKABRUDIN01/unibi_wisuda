@@ -239,3 +239,28 @@ body.register-page {
     font-size: 14px;
   }
 }
+
+.error {
+  border: 2px solid red;
+  background-color: #ffe5e5;
+}
+.error:focus {
+  border: 2px solid #ccc;
+  background-color: #fff;
+}
+.password-wrapper {
+  position: relative;
+}
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+}
+.toggle-icon {
+  position: absolute;
+  right: 12px;
+  top: 45%;
+  transform: translateY(30%);
+  font-size: 1.1em;
+  cursor: pointer;
+  color: #666;
+}
