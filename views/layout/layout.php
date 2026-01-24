@@ -32,6 +32,7 @@ function isActive($page) {
 <?php if ($_SESSION['role'] === 'petugas'): ?>
     <link rel="stylesheet" href="/UNIBI_WISUDA/style/petugas/dashboard.css">
     <link rel="stylesheet" href="/UNIBI_WISUDA/style/petugas/kelola_mahasiswa.css">
+    <link rel="stylesheet" href="/UNIBI_WISUDA/style/petugas/scan.css">
 <?php endif; ?>
 
 <?php if ($_SESSION['role'] === 'mahasiswa'): ?>
@@ -77,6 +78,9 @@ function isActive($page) {
         </a>
         <a href="/UNIBI_WISUDA/views/petugas/detail_wisuda.php" class="sidebar-link <?= isActive('detail_wisuda.php') ?>">
             <i class="fas fa-graduation-cap"></i> Detail Wisudawan
+        </a>
+        <a href="/UNIBI_WISUDA/views/petugas/scan.php" class="sidebar-link <?= isActive('scan.php') ?>">
+            <i class="fas"></i> Presensi Wisudawan
         </a>
     <?php endif; ?>
 

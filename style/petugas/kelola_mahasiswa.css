@@ -80,6 +80,44 @@ td {
   border-bottom: 1px solid #eee;
 }
 
+/* ===== STATUS BUTTON (HADIR / TIDAK HADIR) ===== */
+/* STATUS BADGE */
+.status-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 18px;
+  border-radius: 10px;
+  min-width: 120px;
+
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+
+  cursor: default;
+  pointer-events: none;
+}
+
+/* HADIR */
+.status-btn.hadir {
+  background-color: var(--primary); /* toska */
+  box-shadow: 0 4px 12px rgba(26, 198, 188, 0.25);
+}
+
+/* TIDAK HADIR */
+.status-btn.tidak-hadir {
+  background-color: #f87171; /* merah soft */
+  box-shadow: 0 4px 12px rgba(248, 113, 113, 0.25);
+}
+
+
+/* TIDAK HADIR */
+.status-btn.tidak-hadir {
+  background-color: #ef4444; /* merah */
+}
+
+
 tbody tr:hover {
   background: #f7fafa;
 }

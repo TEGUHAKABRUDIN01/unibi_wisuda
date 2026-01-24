@@ -43,3 +43,4 @@ function openDetailModal(data) {
   // 4. Tampilkan Modal
   document.getElementById("detailModal").style.display = "flex";
 }
+

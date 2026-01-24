@@ -30,12 +30,7 @@
 
     <form action="/UNIBI_WISUDA/models/controllers/login.controller.php" method="POST">
       <input type="text" name="nim" placeholder="Masukkan NIM" required>
-
-      <div class="password-wrapper">
-        <input type="password" id="password" name="password" placeholder="Masukkan Password" required>
-        <i class="fa-solid fa-eye toggle-icon" id="togglePassword"></i>
-      </div>
-
+      <input type="password" name="password" placeholder="Masukkan Password" required>
       <button type="submit" name="login_mahasiswa">Login</button>
     </form>
 
