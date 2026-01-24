@@ -52,7 +52,7 @@ Swal.fire({
       <div class="form-group password-wrapper">
         <label>Password</label>
         <input type="password" id="password" name="password" placeholder="Masukkan Password" required>
-        <i class="fa-solid fa-eye toggle-icon" id="togglePassword"></i>
+        <i class="fa-solid toggle-icon" id="togglePassword"></i>
       </div>
 
       <button type="submit" name="login_petugas">Login</button>
