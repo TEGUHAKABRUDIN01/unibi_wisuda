@@ -33,12 +33,7 @@ if (!$data || $data['status_proses'] !== 'selesai') {
     die("Data tidak ditemukan atau pendaftaran Anda belum dikonfirmasi oleh petugas.");
 }
 
-// Cek di tabel kehadiran_detail
-$cek_hadir = mysqli_query($conn, "SELECT status_kehadiran FROM detail_wisuda WHERE id_proses = '$id_proses'");
-$h = mysqli_fetch_assoc($cek_hadir);
-$status_teks = ($h) ? $h['status_kehadiran'] : "BELUM HADIR";
-
-// Style CSS tetap sama
+// Style CSS
 $style = '
 <style>
     body { font-family: sans-serif; font-size: 12px; }
@@ -49,14 +44,13 @@ $style = '
     .label { width: 130px; font-weight: bold; }
     .barcode-section { text-align: center; margin-top: 15px; }
     .barcode-img { width: 120px; height: 120px; }
-    .status-box { font-weight: bold; color: #d9534f; border: 1px solid #d9534f; padding: 2px 5px; display: inline-block; }
 </style>';
 
 $html = '<html><head>' . $style . '</head><body>';
 
 // LOGIKA PEMISAHAN KONTEN
 if ($tipe === 'mhs') {
-    // TAMPILKAN HANYA KARTU MAHASISWA
+    // KARTU MAHASISWA (kursi = NPM langsung)
     $html .= '
     <div class="card">
         <div class="header">KARTU PESERTA WISUDA (MAHASISWA)</div>
@@ -74,7 +68,7 @@ if ($tipe === 'mhs') {
     </div>';
     $filename = "Kartu_Mahasiswa_" . $data['nim'];
 } else {
-    // TAMPILKAN HANYA KARTU PENDAMPING
+    // KARTU PENDAMPING (kursi = global urutan)
     $html .= '
     <div class="card">
         <div class="header">KARTU PENDAMPING WISUDA (ORANG TUA)</div>
@@ -102,7 +96,7 @@ $options->set('isRemoteEnabled', true);
 
 $dompdf = new Dompdf($options);
 $dompdf->loadHtml($html);
-$dompdf->setPaper('A5', 'portrait'); // Menggunakan A5 karena kartu tunggal lebih kecil
+$dompdf->setPaper('A5', 'portrait'); // ukuran kartu
 $dompdf->render();
 
 $dompdf->stream($filename . ".pdf", ["Attachment" => 1]);

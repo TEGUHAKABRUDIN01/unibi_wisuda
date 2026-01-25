@@ -70,8 +70,9 @@ $pendamping_ada = ($data['jml_pendamping'] > 0);
             <td><?= htmlspecialchars($data['nama_mahasiswa']) ?></td>
             <td><?= htmlspecialchars($data['nama_prodi']) ?></td>
             <td>
-              <?php if ($data['status_proses'] === 'selesai' && !empty($data['id_proses']) && $pendamping_ada): ?>
+              <?php if ($data['status_proses'] === 'selesai' && !empty($data['id_proses'])): ?>
                 <div style="display: flex; flex-direction: column; gap: 5px;">
+                  <!-- Tombol Mahasiswa selalu muncul -->
                   <a href="../../models/controllers/generate_kartu.controller.php?id_proses=<?= $data['id_proses']; ?>&tipe=mhs"
                     class="btn-unduh"
                     target="_blank"
@@ -79,12 +80,17 @@ $pendamping_ada = ($data['jml_pendamping'] > 0);
                     UNDUH KARTU MHS
                   </a>
 
-                  <a href="../../models/controllers/generate_kartu.controller.php?id_proses=<?= $data['id_proses']; ?>&tipe=pnd"
-                    class="btn-unduh"
-                    target="_blank"
-                    style="background-color: #17a2b8; text-align: center;">
-                    UNDUH KARTU PENDAMPING
-                  </a>
+                  <!-- Tombol Pendamping hanya muncul jika sudah ada -->
+                  <?php if ($pendamping_ada): ?>
+                    <a href="../../models/controllers/generate_kartu.controller.php?id_proses=<?= $data['id_proses']; ?>&tipe=pnd"
+                      class="btn-unduh"
+                      target="_blank"
+                      style="background-color: #17a2b8; text-align: center;">
+                      UNDUH KARTU PENDAMPING
+                    </a>
+                  <?php else: ?>
+                    <span class="badge pending">Kartu pendamping belum tersedia</span>
+                  <?php endif; ?>
                 </div>
               <?php else: ?>
                 <span class="badge pending">Belum tersedia</span>
@@ -94,10 +100,10 @@ $pendamping_ada = ($data['jml_pendamping'] > 0);
         </tbody>
       </table>
 
-
-
       <?php if ($pendamping_ada): ?>
         <p class="empty-text"><em>Data pendamping sudah diisi.</em></p>
+      <?php else: ?>
+        <p class="empty-text"><em>Belum ada data pendamping.</em></p>
       <?php endif; ?>
     <?php endif; ?>
   </div>

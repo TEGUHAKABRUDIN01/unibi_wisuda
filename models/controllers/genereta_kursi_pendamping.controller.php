@@ -8,10 +8,10 @@ if (!isset($_GET['id_proses'])) {
 $id_proses = (int) $_GET['id_proses'];
 
 /* ===============================
-   Ambil jurusan mahasiswa
+   Ambil NIM & Jurusan Mahasiswa
 ================================ */
 $q = mysqli_query($conn, "
-    SELECT j.kode_jurusan
+    SELECT m.nim, j.kode_jurusan, m.id_mahasiswa
     FROM proses_wisuda p
     JOIN mahasiswa m ON p.id_mahasiswa = m.id_mahasiswa
     JOIN jurusan j ON m.id_jurusan = j.id_jurusan
@@ -21,45 +21,39 @@ $q = mysqli_query($conn, "
 
 $data = mysqli_fetch_assoc($q);
 if (!$data) {
-  die('Jurusan tidak ditemukan');
+  die('Data mahasiswa tidak ditemukan');
 }
 
-$kode = $data['kode_jurusan']; // IF
+$nim   = $data['nim'];
+$kode  = $data['kode_jurusan'];
+$id_mahasiswa = $data['id_mahasiswa'];
 
 /* ===============================
-   Ambil nomor pendamping terakhir
+   Generate kursi mahasiswa & pendamping
+   Mahasiswa kursi = NPM langsung
+   Pendamping kursi = global urutan
 ================================ */
-$qLast = mysqli_query($conn, "
-    SELECT no_kursi_p2 
-    FROM kursi 
-    WHERE no_kursi_p2 LIKE 'PENDAMPING-$kode-%'
-    ORDER BY id_kursi DESC
-    LIMIT 1
-");
+$last_digits = (int) substr($nim, -3);
 
-$last = mysqli_fetch_assoc($qLast);
+// Mahasiswa kursi = NPM langsung
+$no_kursi_mhs = $kode . "-" . str_pad($last_digits, 3, '0', STR_PAD_LEFT);
 
-$last_number = 0;
-if ($last && $last['no_kursi_p2']) {
-  preg_match('/(\d+)$/', $last['no_kursi_p2'], $m);
-  $last_number = (int)$m[1];
-}
+// Pendamping kursi = global urutan
+$kursi_pnd1 = ($last_digits * 2) - 1;
+$kursi_pnd2 = ($last_digits * 2);
 
-/* ===============================
-   Generate kursi pendamping
-================================ */
-$p1 = 'PENDAMPING-' . $kode . '-' . str_pad($last_number + 1, 3, '0', STR_PAD_LEFT);
-$p2 = 'PENDAMPING-' . $kode . '-' . str_pad($last_number + 2, 3, '0', STR_PAD_LEFT);
+$p1 = 'PENDAMPING-' . $kode . '-' . str_pad($kursi_pnd1, 3, '0', STR_PAD_LEFT);
+$p2 = 'PENDAMPING-' . $kode . '-' . str_pad($kursi_pnd2, 3, '0', STR_PAD_LEFT);
 
 /* ===============================
    UPDATE tabel kursi
 ================================ */
 mysqli_query($conn, "
     UPDATE kursi 
-    SET 
+    SET no_kursi = '$no_kursi_mhs',
         no_kursi_p1 = '$p1',
         no_kursi_p2 = '$p2'
     WHERE id_proses = '$id_proses'
 ");
 
-echo "Kursi pendamping berhasil dibuat";
+echo "Kursi mahasiswa & pendamping berhasil dibuat";

@@ -88,7 +88,7 @@ if ($row = mysqli_fetch_assoc($qBarcode)) {
 
         <div class="form-group">
           <label>Nama Orang Tua 2 (Ibu/Wali)</label>
-          <input type="text" name="nama_ibu" required>
+          <input type="text" name="nama_ibu">
         </div>
 
         <button type="submit" class="btn-simpan">Simpan Pendamping</button>
