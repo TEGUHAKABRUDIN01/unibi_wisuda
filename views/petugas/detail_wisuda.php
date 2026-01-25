@@ -43,9 +43,9 @@ ob_start();
         <th>NIM</th>
         <th>Nama</th>
         <th>No Kursi</th>
+        <th>Status Mahasiswa</th>
         <th>Status Pendamping</th>
         <th>Aksi</th>
-        <th>Status Mahasiswa</th>
       </tr>
     </thead>
     <tbody>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
   <meta charset="UTF-8">
@@ -7,6 +7,24 @@
   <title>Wisuda Unibi</title>
   <link rel="stylesheet" href="style/login-style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .password-wrapper {
+      position: relative;
+    }
+    .password-wrapper input {
+      width: 100%;
+      padding-right: 40px; /* beri ruang untuk ikon */
+    }
+    .toggle-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%); /* sejajarkan vertikal */
+      font-size: 1.1em;
+      cursor: pointer;
+      color: #666;
+    }
+  </style>
 </head>
 
 <body class="login-page">
@@ -30,7 +48,12 @@
 
     <form action="/UNIBI_WISUDA/models/controllers/login.controller.php" method="POST">
       <input type="text" name="nim" placeholder="Masukkan NIM" required>
-      <input type="password" name="password" placeholder="Masukkan Password" required>
+
+      <div class="password-wrapper">
+        <input type="password" id="password" name="password" placeholder="Masukkan Password" required>
+        <i class="fa-solid fa-eye toggle-icon" id="togglePassword"></i>
+      </div>
+
       <button type="submit" name="login_mahasiswa">Login</button>
     </form>
 

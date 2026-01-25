@@ -13,6 +13,23 @@ unset($_SESSION['swal_konfirmasi']);
   <link rel="stylesheet" href="../../style/login-style-petugas.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    .password-wrapper {
+      position: relative;
+    }
+    .password-wrapper input {
+      width: 100%;
+      padding-right: 40px;
+    }
+    .toggle-icon {
+      position: absolute;
+      right: 12px;
+      bottom: 0;
+      font-size: 1.2em;
+      cursor: pointer;
+      color: #666;
+    }
+  </style>
 </head>
 
 <body class="login-page">
@@ -52,7 +69,7 @@ Swal.fire({
       <div class="form-group password-wrapper">
         <label>Password</label>
         <input type="password" id="password" name="password" placeholder="Masukkan Password" required>
-        <i class="fa-solid toggle-icon" id="togglePassword"></i>
+        <i class="fa-solid fa-eye toggle-icon" id="togglePassword"></i>
       </div>
 
       <button type="submit" name="login_petugas">Login</button>
@@ -71,17 +88,6 @@ Swal.fire({
     this.classList.toggle('fa-eye-slash');
   });
 </script>
-
-<!-- LOGIN PETUGAS SALAH - akun tidak ditemukan -->
-<?php if (isset($_SESSION['swal_petugas'])): ?>
-<script>
-  Swal.fire({
-    icon: 'error',
-    title: 'Login Gagal',
-    text: '<?= $_SESSION['swal_petugas']; ?>'
-  });
-</script>
-<?php unset($_SESSION['swal_petugas']); endif; ?>
 
 </body>
 </html>

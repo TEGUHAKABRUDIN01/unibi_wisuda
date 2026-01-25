@@ -273,18 +273,18 @@
   }
 
 .password-wrapper {
-    position: relative;
-  }
-  .password-wrapper input {
-    width: 100%;
-    padding-right: 40px;
-  }
-  .toggle-icon {
-    position: absolute;
-    right: 12px;
-    top: 65%;              
-    transform: translateY(-40%); 
-    font-size: 1.2em;      
-    cursor: pointer;
-    color: #666;
-  }
+  position: relative;
+}
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+}
+.toggle-icon {
+  position: absolute;
+  right: 12px;
+  top: 70%;
+  transform: translateY(-50%); 
+  font-size: 1.1em;
+  cursor: pointer;
+  color: #666;
+}
