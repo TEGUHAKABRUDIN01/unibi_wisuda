@@ -13,14 +13,13 @@
     }
     .password-wrapper input {
       width: 100%;
-      padding-right: 40px; /* beri ruang untuk ikon */
+      padding-right: 40px;
     }
     .toggle-icon {
       position: absolute;
       right: 12px;
-      top: 50%;
-      transform: translateY(-50%); /* sejajarkan vertikal */
-      font-size: 1.1em;
+      bottom: 0;
+      font-size: 1.2em;
       cursor: pointer;
       color: #666;
     }
@@ -29,46 +28,50 @@
 
 <body class="login-page">
 
-  <div class="login-container">
+<div class="login-container">
 
-    <div class="left-card">
-      <img src="uploads/logo.png" alt="Logo UNIBI" />
-      <h2>UNIBI</h2>
-      <p>"Be The Young Entrepreneur"</p>
-      <span>Happy Graduation</span>
+  <div class="left-card">
+    <img src="uploads/logo.png" alt="Logo UNIBI" />
+    <h2>UNIBI</h2>
+    <p>"Be The Young Entrepreneur"</p>
+    <span>Happy Graduation</span>
+  </div>
+
+  <div class="right-card">
+    <h3>MASUK</h3>
+
+    <div class="login-switch">
+      <button type="button" class="switch-btn active">Mahasiswa</button>
+      <a href="views/petugas/login_petugas.php" class="switch-btn">Petugas</a>
     </div>
 
-    <div class="right-card">
-      <h3>MASUK</h3>
+    <form action="models/controllers/login.controller.php" method="POST">
+      <input type="text" name="nim" placeholder="Masukkan NIM" required>
 
-      <div class="login-switch">
-        <button type="button" class="switch-btn active">Mahasiswa</button>
-        <a href="/UNIBI_WISUDA/views/petugas/login_petugas.php" class="switch-btn">Petugas</a>
+      <div class="password-wrapper">
+        <input type="password" id="password" name="password" placeholder="Masukkan Password" required>
+        <i class="fa-solid fa-eye toggle-icon" id="togglePassword"></i>
       </div>
 
-    <form action="/UNIBI_WISUDA/models/controllers/login.controller.php" method="POST">
-      <input type="text" name="nim" placeholder="Masukkan NIM" required>
-      <input type="password" name="password" placeholder="Masukkan Password" required>
       <button type="submit" name="login_mahasiswa">Login</button>
     </form>
 
-      <p>Belum daftar? <a href="views/mahasiswa/register.php">Daftar disini</a></p>
-    </div>
-
+    <p>Belum daftar? <a href="views/mahasiswa/register.php">Daftar disini</a></p>
   </div>
 
-  <script>
-    const passwordInput = document.getElementById('password');
-    const toggleIcon = document.getElementById('togglePassword');
+</div>
 
-    toggleIcon.addEventListener('click', function() {
-      const isHidden = passwordInput.type === 'password';
-      passwordInput.type = isHidden ? 'text' : 'password';
-      this.classList.toggle('fa-eye');
-      this.classList.toggle('fa-eye-slash');
-    });
-  </script>
+<script>
+  const passwordInput = document.getElementById('password');
+  const toggleIcon = document.getElementById('togglePassword');
+
+  toggleIcon.addEventListener('click', function () {
+    const isHidden = passwordInput.type === 'password';
+    passwordInput.type = isHidden ? 'text' : 'password';
+    this.classList.toggle('fa-eye');
+    this.classList.toggle('fa-eye-slash');
+  });
+</script>
 
 </body>
-
 </html>
