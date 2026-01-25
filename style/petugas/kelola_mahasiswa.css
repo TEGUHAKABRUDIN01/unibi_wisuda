@@ -1,4 +1,3 @@
-
 .table-container {
   margin-top: 30px;
   background: white;
@@ -11,7 +10,8 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   padding: 14px;
   text-align: left;
   font-size: 14px;
@@ -34,8 +34,12 @@ tbody tr:hover {
   cursor: pointer;
 }
 
-.action .fa-pen { color: var(--icon-color-blue); }
-.action .fa-trash { color: #e03131; }
+.action .fa-pen {
+  color: var(--icon-color-blue);
+}
+.action .fa-trash {
+  color: #e03131;
+}
 
 /* =========================
    KELOLA MAHASISWA / WISUDAWAN
@@ -43,7 +47,7 @@ tbody tr:hover {
 
 body {
   background: var(--bg-main);
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: "Segoe UI", Arial, sans-serif;
 }
 
 /* CONTAINER TABLE */
@@ -111,12 +115,16 @@ td {
   box-shadow: 0 4px 12px rgba(248, 113, 113, 0.25);
 }
 
-
 /* TIDAK HADIR */
 .status-btn.tidak-hadir {
   background-color: #ef4444; /* merah */
 }
 
+/* PROSES */
+.status-btn.proses {
+  background-color: #3b82f6; /* biru */
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
 
 tbody tr:hover {
   background: #f7fafa;
@@ -184,7 +192,8 @@ tbody tr:hover {
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  th, td {
+  th,
+  td {
     font-size: 12px;
     padding: 10px;
   }
@@ -255,18 +264,17 @@ tbody tr:hover {
   margin-top: 20px;
 }
 
-
 /* ===== BUTTONS ===== */
 .btn {
-      padding: 10px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 14px;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    width: 90px;
-    margin: 5px;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  width: 90px;
+  margin: 5px;
 }
 
 .btn-primary {
@@ -323,7 +331,6 @@ tbody tr:hover {
   font-size: 18px;
 }
 
-
 /* ===============================
    MODAL DETAIL WISUDA
 ================================ */
@@ -331,7 +338,7 @@ tbody tr:hover {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
   justify-content: center;
   align-items: center;
   z-index: 999;
@@ -342,7 +349,7 @@ tbody tr:hover {
   padding: 24px;
   width: 400px;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   position: relative;
 }
 
@@ -441,7 +448,8 @@ tbody tr:hover {
     font-size: 12px;
   }
 
-  th, td {
+  th,
+  td {
     padding: 8px;
   }
 }

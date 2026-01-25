@@ -49,31 +49,40 @@ ob_start();
       </tr>
     </thead>
     <tbody>
-      <tbody>
-<?php $no = 1;
-while ($d = mysqli_fetch_assoc($query)) :
+    <tbody>
+      <?php $no = 1;
+      while ($d = mysqli_fetch_assoc($query)) :
 
-  // status mahasiswa
-// status mahasiswa
-$status_mhs = ($d['status_kehadiran'] === 'hadir')
-  ? '<span class="status-btn hadir">Hadir</span>'
-  : '<span class="status-btn tidak-hadir">Tidak Hadir</span>';
+        // status mahasiswa
+        // status mahasiswa
+        if ($d['status_kehadiran'] === 'hadir') {
+          $status_mhs = '<span class="status-btn hadir">Hadir</span>';
+        } elseif ($d['status_kehadiran'] === 'proses' || $d['status_kehadiran'] === '') {
+          $status_mhs = '<span class="status-btn tidak-hadir">Proses</span>';
+        } else {
+          $status_mhs = '<span class="status-btn tidak-hadir">Tidak Hadir</span>';
+        }
 
-$status_pendamping = ($d['status_kehadiran_pendamping'] === 'hadir')
-  ? '<span class="status-btn hadir">Hadir</span>'
-  : '<span class="status-btn tidak-hadir">Tidak Hadir</span>';
+        if ($d['status_kehadiran_pendamping'] === 'hadir') {
+          $status_pendamping = '<span class="status-btn hadir">Hadir</span>';
+        } elseif ($d['status_kehadiran_pendamping'] === 'proses') {
+          $status_pendamping = '<span class="status-btn tidak-hadir
+          ">Proses</span>';
+        } else {
+          $status_pendamping = '<span class="status-btn tidak-hadir">Tidak Hadir</span>';
+        }
 
-?>
-  
+      ?>
+
 
         <tr>
           <td><?= $no++; ?></td>
           <td><?= $d['nim']; ?></td>
           <td><?= $d['nama_mahasiswa']; ?></td>
           <td><?= $d['no_kursi'] ?? '-'; ?></td>
-        </td>
-        <td><?= $status_mhs; ?></td>
-        <td><?= $status_pendamping; ?></td>
+          </td>
+          <td><?= $status_mhs; ?></td>
+          <td><?= $status_pendamping; ?></td>
           <td>
             <button class="btn btn-detail"
               onclick='openDetailModal(<?= json_encode($d); ?>)'>
@@ -143,9 +152,9 @@ $status_pendamping = ($d['status_kehadiran_pendamping'] === 'hadir')
 <script src="../../script/detail_wisuda.js"></script>
 
 <script>
-function closeDetailModal() {
-  document.getElementById("detailModal").style.display = "none";
-}
+  function closeDetailModal() {
+    document.getElementById("detailModal").style.display = "none";
+  }
 </script>
 
 <?php
