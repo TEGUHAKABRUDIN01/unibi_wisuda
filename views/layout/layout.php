@@ -80,7 +80,7 @@ function isActive($page) {
             <i class="fas fa-graduation-cap"></i> Detail Wisudawan
         </a>
         <a href="/UNIBI_WISUDA/views/petugas/scan.php" class="sidebar-link <?= isActive('scan.php') ?>">
-            <i class="fas"></i> Presensi Wisudawan
+            <i class="fas fa-qrcode"></i> QR Check-In Wisuda
         </a>
     <?php endif; ?>
 
