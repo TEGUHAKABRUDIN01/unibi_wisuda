@@ -7,6 +7,13 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'petugas') {
   exit;
 }
 
+$manajemen = getLatestManajemen($conn);
+
+if (!$manajemen || $manajemen['status'] !== 'aktif') {
+    header("Location: /UNIBI_WISUDA/views/petugas/manajemen_wisuda.php");
+    exit;
+}
+
 $id_proses = $_GET['id'] ?? null;
 if (!$id_proses) {
   header("Location: dashboard_petugas.php");

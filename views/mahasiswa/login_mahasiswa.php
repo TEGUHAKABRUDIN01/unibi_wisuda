@@ -1,5 +1,10 @@
 <?php
 session_start();
+include_once __DIR__ . '/../../config/config.php';
+
+$manajemen = getLatestManajemen($conn);
+$manajemen_phase = getManajemenPhase($manajemen);
+$registration_open = $manajemen_phase === 'running';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -64,7 +69,17 @@ session_start();
         <button type="submit">Login</button>
       </form>
 
-      <p>Belum daftar? <a href="/UNIBI_WISUDA/views/mahasiswa/register.php">Daftar Sekarang</a></p>
+      <?php if ($registration_open): ?>
+        <p>Belum daftar? <a href="/UNIBI_WISUDA/views/mahasiswa/register.php">Daftar Sekarang</a></p>
+      <?php else: ?>
+        <?php if ($manajemen && $manajemen_phase === 'before-start'): ?>
+            <p>Pendaftaran dimulai pada <?= htmlspecialchars($manajemen['tgl_mulai']) ?>.</p>
+        <?php elseif ($manajemen && $manajemen_phase === 'ended'): ?>
+            <p>Acara wisuda telah selesai. Pendaftaran ditutup.</p>
+        <?php else: ?>
+            <p>Pendaftaran belum dibuka. Hubungi admin untuk informasi.</p>
+        <?php endif; ?>
+      <?php endif; ?>
     </div>
   </div>
 

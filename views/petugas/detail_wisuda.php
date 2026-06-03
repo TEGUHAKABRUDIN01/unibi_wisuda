@@ -7,6 +7,14 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'petugas') {
   exit;
 }
 
+$manajemen = getLatestManajemen($conn);
+$manajemen = getLatestManajemen($conn);
+
+if (!$manajemen || $manajemen['status'] !== 'aktif') {
+    header("Location: /UNIBI_WISUDA/views/petugas/manajemen_wisuda.php");
+    exit;
+}
+
 // Tentukan jumlah record per halaman
 $limit = 5;
 

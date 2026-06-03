@@ -3,6 +3,18 @@ ob_start();
 include_once '../../config/config.php';
 session_start();
 
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'petugas') {
+  echo json_encode(['status' => 'error', 'message' => 'Akses tidak diizinkan.']);
+  exit;
+}
+
+$manajemen = getLatestManajemen($conn);
+
+if (!$manajemen || $manajemen['status'] !== 'aktif') {
+    header("Location: /UNIBI_WISUDA/views/petugas/manajemen_wisuda.php");
+    exit;
+}
+
 header('Content-Type: application/json');
 
 try {

@@ -8,6 +8,13 @@
       exit;
   }
 
+$manajemen = getLatestManajemen($conn);
+
+if (!$manajemen || $manajemen['status'] !== 'aktif') {
+    header("Location: /UNIBI_WISUDA/views/petugas/manajemen_wisuda.php");
+    exit;
+}
+
   ob_start();
 ?>
 

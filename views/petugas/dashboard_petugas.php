@@ -21,6 +21,10 @@ $total_wisudawan = $data_proses['total_proses'] + $data_selesai['total_selesai']
 $query_hadir_mhs = mysqli_query($conn, "SELECT COUNT(*) AS total_hadir_mhs FROM detail_wisuda WHERE status_kehadiran = 'hadir'");
 $data_hadir_mhs = mysqli_fetch_assoc($query_hadir_mhs);
 
+// 2a. Ambil status manajemen wisuda
+$manajemen_data = getLatestManajemen($conn);
+$manajemen_phase = getManajemenPhase($manajemen_data);
+
 $query_hadir_pendamping = mysqli_query($conn, "SELECT COUNT(*) AS total_hadir_pendamping FROM detail_wisuda WHERE status_kehadiran_pendamping = 'hadir'");
 $data_hadir_pendamping = mysqli_fetch_assoc($query_hadir_pendamping);
 
@@ -76,6 +80,31 @@ ob_start();
             </div>
         </div>
         <div class="card-value"><?= $data_selesai['total_selesai'] ?></div>
+    </div>
+</div>
+
+<div class="cards">
+    <div class="card">
+        <div class="card-header">
+            <span>Manajemen Wisuda</span>
+            <div class="icon-box icon-purple">
+                <i class="fa-solid fa-cogs"></i>
+            </div>
+        </div>
+        <div class="card-value">
+            <?php if ($manajemen_data): ?>
+                <?= htmlspecialchars(strtoupper(getAutoManajemenStatus($manajemen_data))) ?>
+            <?php else: ?>
+                BELUM DIISI
+            <?php endif; ?>
+        </div>
+        <div class="card-subtext">
+            <?php if ($manajemen_data): ?>
+                <?= htmlspecialchars($manajemen_data['tgl_mulai']) ?> s/d <?= htmlspecialchars($manajemen_data['tgl_selesai']) ?> | <?= htmlspecialchars($manajemen_data['tempat']) ?>
+            <?php else: ?>
+                Atur tanggal, tempat, NPM, kursi.
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 

@@ -3,17 +3,35 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Proteksi global
 if (!isset($_SESSION['role'])) {
     header("Location: /UNIBI_WISUDA/index.php");
     exit;
 }
 
-// Fungsi untuk deteksi halaman aktif
+if (!function_exists('getLatestManajemen')) {
+    include_once __DIR__ . '/../../config/config.php';
+}
+
+$sidebarManajemen = null;
+if (isset($conn)) {
+    $sidebarManajemen = getLatestManajemen($conn);
+}
+
+// Tentukan apakah menu manajemen bisa ditampilkan
+// Muncul jika: belum ada manajemen OR manajemen sebelumnya sudah selesai
+$canShowManajemenMenu = !$sidebarManajemen || getAutoManajemenStatus($sidebarManajemen) === 'selesai';
+
+// Tentukan apakah menu operasional bisa ditampilkan
+// Hanya muncul jika ada manajemen dan masih aktif
+$canShowOperationalMenu = $sidebarManajemen && getAutoManajemenStatus($sidebarManajemen) === 'aktif';
+
+// Tentukan apakah menu arsip bisa ditampilkan
+// Muncul jika ada manajemen (bisa aktif atau selesai)
+$canShowArchiveMenu = $sidebarManajemen && getAutoManajemenStatus($sidebarManajemen) !== 'not-configured';
+
 function isActive($page) {
     $currentPage = basename($_SERVER['PHP_SELF']);
     
-    // Jika di edit_wisuda.php, anggap kelola_mahasiswa.php yang aktif
     if ($currentPage === 'edit_wisuda.php') {
         return $page === 'kelola_mahasiswa.php' ? 'active' : '';
     }
@@ -73,15 +91,27 @@ function isActive($page) {
         <a href="/UNIBI_WISUDA/views/petugas/dashboard_petugas.php" class="sidebar-link <?= isActive('dashboard_petugas.php') ?>">
             <i class="fas fa-home"></i> Dashboard
         </a>
-        <a href="/UNIBI_WISUDA/views/petugas/kelola_mahasiswa.php" class="sidebar-link <?= isActive('kelola_mahasiswa.php') ?>">
-            <i class="fas fa-users"></i> Kelola Mahasiswa
-        </a>
-        <a href="/UNIBI_WISUDA/views/petugas/detail_wisuda.php" class="sidebar-link <?= isActive('detail_wisuda.php') ?>">
-            <i class="fas fa-graduation-cap"></i> Detail Wisudawan
-        </a>
-        <a href="/UNIBI_WISUDA/views/petugas/scan.php" class="sidebar-link <?= isActive('scan.php') ?>">
-            <i class="fas fa-qrcode"></i> QR Check-In Wisuda
-        </a>
+        <?php if ($canShowManajemenMenu): ?>
+            <a href="/UNIBI_WISUDA/views/petugas/manajemen_wisuda.php" class="sidebar-link <?= isActive('manajemen_wisuda.php') ?>">
+                <i class="fas fa-cogs"></i> Manajemen Wisuda
+            </a>
+        <?php endif; ?>
+        <?php if ($canShowOperationalMenu): ?>
+            <a href="/UNIBI_WISUDA/views/petugas/kelola_mahasiswa.php" class="sidebar-link <?= isActive('kelola_mahasiswa.php') ?>">
+                <i class="fas fa-users"></i> Kelola Mahasiswa
+            </a>
+            <a href="/UNIBI_WISUDA/views/petugas/detail_wisuda.php" class="sidebar-link <?= isActive('detail_wisuda.php') ?>">
+                <i class="fas fa-graduation-cap"></i> Detail Wisudawan
+            </a>
+            <a href="/UNIBI_WISUDA/views/petugas/scan.php" class="sidebar-link <?= isActive('scan.php') ?>">
+                <i class="fas fa-qrcode"></i> QR Check-In Wisuda
+            </a>
+        <?php endif; ?>
+        <?php if ($canShowArchiveMenu): ?>
+            <a href="/UNIBI_WISUDA/views/petugas/arsip_wisuda.php" class="sidebar-link <?= isActive('arsip_wisuda.php') ?>">
+                <i class="fas fa-archive"></i> Arsip Wisuda
+            </a>
+        <?php endif; ?>
     <?php endif; ?>
 
     <?php if ($_SESSION['role'] === 'mahasiswa'): ?>

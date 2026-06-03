@@ -54,7 +54,9 @@ CREATE TABLE `detail_wisuda` (
   `id_kursi` int DEFAULT NULL,
   `id_petugas` int DEFAULT NULL,
   `status_kehadiran` enum('hadir','tidak hadir') DEFAULT 'tidak hadir',
-  `timestamp_scan` datetime DEFAULT NULL
+  `status_kehadiran_pendamping` enum('hadir','tidak hadir') DEFAULT 'tidak hadir',
+  `timestamp_scan` datetime DEFAULT NULL,
+  `waktu_hadir_pendamping` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -73,7 +75,9 @@ INSERT INTO `detail_wisuda` (`id_detail`, `id_proses`, `id_barcode`, `id_kursi`,
 
 CREATE TABLE `fakultas` (
   `id_fakultas` int NOT NULL,
-  `nama_fakultas` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL
+  `nama_fakultas` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `npm_format` varchar(30) DEFAULT NULL,
+  `jumlah_kursi` int DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -226,6 +230,7 @@ CREATE TABLE `proses_wisuda` (
   `id_mahasiswa` int NOT NULL,
   `id_pendamping` int DEFAULT NULL,
   `id_petugas` int DEFAULT NULL,
+  `id_manajemen` int DEFAULT NULL,
   `status_proses` enum('proses','selesai') DEFAULT 'proses',
   `is_edited` int DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -236,6 +241,31 @@ CREATE TABLE `proses_wisuda` (
 
 INSERT INTO `proses_wisuda` (`id_proses`, `id_mahasiswa`, `id_pendamping`, `id_petugas`, `status_proses`, `is_edited`) VALUES
 (72, 82, 92, 1, 'selesai', 0);
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `manajemen_wisuda`
+--
+
+CREATE TABLE `manajemen_wisuda` (
+  `id_manajemen` int NOT NULL,
+  `angkatan` varchar(10) NOT NULL,
+  `tgl_mulai` date NOT NULL,
+  `jam_mulai` time NOT NULL,
+  `tgl_selesai` date NOT NULL,
+  `jam_selesai` time NOT NULL,
+  `tempat` varchar(100) NOT NULL,
+  `alamat` varchar(255) NOT NULL,
+  `status` enum('draft','aktif','selesai') NOT NULL DEFAULT 'draft',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `manajemen_wisuda`
+--
+
+
 
 --
 -- Indexes for dumped tables
@@ -315,7 +345,14 @@ ALTER TABLE `proses_wisuda`
   ADD PRIMARY KEY (`id_proses`),
   ADD KEY `id_mahasiswa` (`id_mahasiswa`),
   ADD KEY `id_pendamping` (`id_pendamping`),
-  ADD KEY `id_petugas` (`id_petugas`);
+  ADD KEY `id_petugas` (`id_petugas`),
+  ADD KEY `id_manajemen` (`id_manajemen`);
+
+--
+-- Indexes for table `manajemen_wisuda`
+--
+ALTER TABLE `manajemen_wisuda`
+  ADD PRIMARY KEY (`id_manajemen`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -382,6 +419,12 @@ ALTER TABLE `proses_wisuda`
   MODIFY `id_proses` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
+-- AUTO_INCREMENT for table `manajemen_wisuda`
+--
+ALTER TABLE `manajemen_wisuda`
+  MODIFY `id_manajemen` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -438,7 +481,8 @@ ALTER TABLE `prodi`
 ALTER TABLE `proses_wisuda`
   ADD CONSTRAINT `proses_wisuda_ibfk_1` FOREIGN KEY (`id_mahasiswa`) REFERENCES `mahasiswa` (`id_mahasiswa`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `proses_wisuda_ibfk_2` FOREIGN KEY (`id_pendamping`) REFERENCES `pendamping` (`id_pendamping`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `proses_wisuda_ibfk_3` FOREIGN KEY (`id_petugas`) REFERENCES `petugas` (`id_petugas`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `proses_wisuda_ibfk_3` FOREIGN KEY (`id_petugas`) REFERENCES `petugas` (`id_petugas`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `proses_wisuda_ibfk_4` FOREIGN KEY (`id_manajemen`) REFERENCES `manajemen_wisuda` (`id_manajemen`) ON DELETE SET NULL ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
