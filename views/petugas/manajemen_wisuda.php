@@ -11,6 +11,16 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'petugas') {
 $result_manajemen = mysqli_query($conn, "SELECT * FROM manajemen_wisuda ORDER BY id_manajemen DESC LIMIT 1");
 $manajemen = mysqli_fetch_assoc($result_manajemen);
 
+// Proteksi: jika sudah ada event (aktif/selesai), redirect ke dashboard
+if ($manajemen) {
+    $status_skrg = getAutoManajemenStatus($manajemen);
+    if ($status_skrg === 'aktif' || $status_skrg === 'selesai') {
+        header("Location: /UNIBI_WISUDA/views/petugas/dashboard_petugas.php");
+        exit;
+    }
+}
+
+
 // Data fakultas untuk konfigurasi NPM dan kursi
 $query_fakultas = mysqli_query($conn, "SELECT * FROM fakultas ORDER BY nama_fakultas ASC");
 $fakultas = [];

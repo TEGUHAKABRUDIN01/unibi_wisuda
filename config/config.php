@@ -1,14 +1,44 @@
 <?php
 
+
+date_default_timezone_set('Asia/Jakarta');
+
 $host = "localhost";
 $user = "root";
-$pass = "123";
+$pass = "";
 $db = "wisuda_unibi";
 
 $conn = mysqli_connect($host, $user, $pass, $db);
 
 if (!$conn) {
     die("Koneksi gagal: " . mysqli_connect_error());
+}
+
+function getAutoManajemenStatus($manajemen)
+{
+    if (!$manajemen) {
+        return 'not-configured';
+    }
+
+    $tgl_selesai = $manajemen['tgl_selesai'] ?? '';
+    $jam_selesai = $manajemen['jam_selesai'] ?? '23:59:59';
+    if (!empty($tgl_selesai)) {
+        $end_datetime = strtotime($tgl_selesai . ' ' . $jam_selesai);
+        if ($end_datetime && time() > $end_datetime) {
+            return 'selesai';
+        }
+    }
+
+    $tgl_mulai = $manajemen['tgl_mulai'] ?? '';
+    $jam_mulai = $manajemen['jam_mulai'] ?? '00:00:00';
+    if (!empty($tgl_mulai)) {
+        $start_datetime = strtotime($tgl_mulai . ' ' . $jam_mulai);
+        if ($start_datetime && time() < $start_datetime) {
+            return 'draft';
+        }
+    }
+
+    return 'aktif';
 }
 
 function getLatestManajemen($conn)
@@ -18,7 +48,11 @@ function getLatestManajemen($conn)
         "SELECT * FROM manajemen_wisuda ORDER BY id_manajemen DESC LIMIT 1"
     );
 
-    return $result ? mysqli_fetch_assoc($result) : null;
+    $manajemen = $result ? mysqli_fetch_assoc($result) : null;
+    if ($manajemen) {
+        $manajemen['status'] = getAutoManajemenStatus($manajemen);
+    }
+    return $manajemen;
 }
 
 function getManajemenById($conn, $id)
@@ -30,25 +64,16 @@ function getManajemenById($conn, $id)
         "SELECT * FROM manajemen_wisuda WHERE id_manajemen = $id LIMIT 1"
     );
 
-    return $result ? mysqli_fetch_assoc($result) : null;
-}
-
-function getAutoManajemenStatus($manajemen)
-{
-    if (!$manajemen) {
-        return 'not-configured';
+    $manajemen = $result ? mysqli_fetch_assoc($result) : null;
+    if ($manajemen) {
+        $manajemen['status'] = getAutoManajemenStatus($manajemen);
     }
-
-    return $manajemen['status'] ?? 'draft';
+    return $manajemen;
 }
 
 function getManajemenPhase($manajemen)
 {
-    if (!$manajemen) {
-        return 'not-configured';
-    }
-
-    return $manajemen['status'] ?? 'draft';
+    return getAutoManajemenStatus($manajemen);
 }
 
 function isManajemenRunning($conn)

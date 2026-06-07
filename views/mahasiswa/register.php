@@ -158,6 +158,14 @@ if (!$registration_open) {
       }
     });
   }
+
+  // Jalankan format NPM & filter prodi saat load jika fakultas sudah terpilih
+  document.addEventListener('DOMContentLoaded', function() {
+    const fakultasSelect = document.getElementById('id_fakultas');
+    if (fakultasSelect && fakultasSelect.value) {
+      loadNpmFormat();
+    }
+  });
 </script>
 
 <script>

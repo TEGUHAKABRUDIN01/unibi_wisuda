@@ -30,9 +30,11 @@ $query = mysqli_query($conn, "
     p.is_edited,
     m.nama_mahasiswa,
     m.nim,
-    m.id_prodi
+    m.id_prodi,
+    f.npm_format
   FROM proses_wisuda p
   JOIN mahasiswa m ON p.id_mahasiswa = m.id_mahasiswa
+  JOIN fakultas f ON m.id_fakultas = f.id_fakultas
   WHERE p.id_proses = '$id_proses'
 ");
 
@@ -42,6 +44,9 @@ if (!$data) {
   echo "<script>alert('Data tidak ditemukan'); window.location='dashboard_petugas.php';</script>";
   exit;
 }
+
+$prefix = $data['npm_format'] ?? '';
+$suffix_nim = !empty($prefix) && strpos($data['nim'], $prefix) === 0 ? substr($data['nim'], strlen($prefix)) : $data['nim'];
 
 /* ===============================
    Buffer ke layout
@@ -80,13 +85,18 @@ ob_start();
 
       <div class="form-group">
         <label>NIM</label>
-        <input 
-          type="text" 
-          name="nim" 
-          value="<?= htmlspecialchars($data['nim']); ?>" 
-          required
-          <?= $data['is_edited'] ? 'readonly' : ''; ?>
-        >
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <span id="npm_format_display" style="background: #f0f0f0; padding: 0.75rem; border-radius: 4px; min-width: 80px; text-align: center; font-weight: bold;"><?= htmlspecialchars($prefix); ?></span>
+          <input 
+            type="text" 
+            id="nim"
+            name="nim" 
+            value="<?= htmlspecialchars($suffix_nim); ?>" 
+            required
+            <?= $data['is_edited'] ? 'readonly' : ''; ?>
+            style="flex: 1;"
+          >
+        </div>
       </div>
 
       <div class="form-group">
@@ -95,13 +105,19 @@ ob_start();
           name="id_prodi" 
           required 
           <?= $data['is_edited'] ? 'disabled' : ''; ?>
+          onchange="updatePrefix()"
         >
           <?php
-          $prodi_query = mysqli_query($conn, "SELECT * FROM prodi");
+          $prodi_query = mysqli_query($conn, "
+            SELECT p.id_prodi, p.nama_prodi, p.id_fakultas, f.npm_format 
+            FROM prodi p 
+            JOIN fakultas f ON p.id_fakultas = f.id_fakultas
+            ORDER BY p.nama_prodi ASC
+          ");
           while ($p = mysqli_fetch_assoc($prodi_query)) :
             $selected = ($p['id_prodi'] == $data['id_prodi']) ? "selected" : "";
           ?>
-            <option value="<?= $p['id_prodi']; ?>" <?= $selected; ?>>
+            <option value="<?= $p['id_prodi']; ?>" data-prefix="<?= htmlspecialchars($p['npm_format']); ?>" <?= $selected; ?>>
               <?= $p['nama_prodi']; ?>
             </option>
           <?php endwhile; ?>
@@ -123,6 +139,19 @@ ob_start();
     </form>
   </div>
 </div>
+
+<script>
+  function updatePrefix() {
+    const prodiSelect = document.querySelector('select[name="id_prodi"]');
+    const selectedOption = prodiSelect.options[prodiSelect.selectedIndex];
+    const prefixDisplay = document.getElementById('npm_format_display');
+    
+    if (selectedOption) {
+      const prefix = selectedOption.getAttribute('data-prefix');
+      prefixDisplay.textContent = prefix || '-';
+    }
+  }
+</script>
 
 <?php
 $content = ob_get_clean();
