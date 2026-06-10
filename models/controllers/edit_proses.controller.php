@@ -22,6 +22,16 @@ if (isset($_POST['edit_data'])) {
     ");
     $data_prodi = mysqli_fetch_assoc($res_prodi);
 
+    $res_mhs = mysqli_query($conn, "
+    SELECT jenis_peserta
+    FROM mahasiswa
+    WHERE id_mahasiswa = '$id_mahasiswa'
+");
+
+    $data_mhs = mysqli_fetch_assoc($res_mhs);
+
+    $jenis_peserta = $data_mhs['jenis_peserta'];
+
     if (!$data_prodi) {
       throw new Exception("Program studi tidak ditemukan.");
     }
@@ -31,7 +41,17 @@ if (isset($_POST['edit_data'])) {
     $nama_prodi = strtoupper($data_prodi['nama_prodi']);
 
     // Gabungkan prefix fakultas dengan suffix 6-digit
+    if ($jenis_peserta === 'susulan') {
+
+    // mahasiswa angkatan lama
+    $full_nim = $nim;
+
+} else {
+
+    // mahasiswa angkatan sekarang
     $full_nim = $npm_format . $nim;
+
+}
 
     // 2. Update data mahasiswa (termasuk id_fakultas agar tidak inkonsisten)
     $sql_mhs = "UPDATE mahasiswa 

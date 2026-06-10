@@ -12,7 +12,9 @@ $_SESSION['error_fields'] = [];
 
 // 1. Ambil input
 $nama     = trim($_POST['nama']);
-$nim      = trim($_POST['nim']);
+$jenis_peserta = $_POST['jenis_peserta'] ?? 'reguler';
+$nim        = trim($_POST['nim'] ?? '');
+$nim_manual = trim($_POST['nim_manual'] ?? '');
 $password = trim($_POST['password']);
 $id_prodi = $_POST['id_prodi'];
 $id_fakultas = intval($_POST['id_fakultas'] ?? 0);
@@ -32,20 +34,36 @@ if (!$manajemen || getManajemenPhase($manajemen) !== 'aktif') {
 
 // 3. Validasi dasar: Cek form kosong
 if (empty($nama)) $_SESSION['error_fields'][] = 'nama';
-if (empty($nim)) $_SESSION['error_fields'][] = 'nim';
 if (empty($password)) $_SESSION['error_fields'][] = 'password';
 if (empty($id_prodi)) $_SESSION['error_fields'][] = 'id_prodi';
 if (empty($id_fakultas)) $_SESSION['error_fields'][] = 'id_fakultas';
 if (empty($file['name'])) $_SESSION['error_fields'][] = 'sk_wisuda';
 
+if ($jenis_peserta === 'reguler') {
+
+    if (empty($nim)) {
+        $_SESSION['error_fields'][] = 'nim';
+    }
+
+} else {
+
+    $nim_manual = trim($_POST['nim_manual'] ?? '');
+
+    if (empty($nim_manual)) {
+        $_SESSION['error_fields'][] = 'nim_manual';
+    }
+}
+
 if (!empty($_SESSION['error_fields'])) {
-  $_SESSION['swal_error'] = [
-    'icon' => 'error',
-    'title' => 'Registrasi Gagal',
-    'text'  => 'Semua form wajib diisi!'
-  ];
-  header("Location: /UNIBI_WISUDA/views/mahasiswa/register.php");
-  exit;
+
+    $_SESSION['swal_error'] = [
+        'icon' => 'error',
+        'title' => 'Registrasi Gagal',
+        'text' => 'Semua form wajib diisi!'
+    ];
+
+    header("Location: /UNIBI_WISUDA/views/mahasiswa/register.php");
+    exit;
 }
 
 // 4. Ambil format NPM dari fakultas
@@ -63,7 +81,12 @@ if (!$fak_data) {
 }
 
 $npm_format = $fak_data['npm_format'] ?? '';
-$full_nim = $npm_format . $nim;
+
+if ($jenis_peserta === 'susulan') {
+    $full_nim = $nim_manual;
+} else {
+    $full_nim = $npm_format . $nim;
+}
 
 // 5. Validasi Password (Huruf, Angka, Max 16 Karakter)
 if (strlen($password) > 16) {
@@ -113,16 +136,35 @@ if (preg_match('/[0-9]/', $nama)) {
 }
 
 // 6b. Validasi NIM: harus angka & sesuai panjang format
-if (!ctype_digit($nim) || strlen($full_nim) !== 9) {
-  $_SESSION['error_fields'][] = 'nim';
-  $_SESSION['form_data']['nim'] = '';
-  $_SESSION['swal_error'] = [
-    'icon' => 'error',
-    'title' => 'Registrasi Gagal',
-    'text'  => 'NPM harus 9 digit. Format: ' . htmlspecialchars($npm_format) . '+ 6 digit lanjutan'
-  ];
-  header("Location: /UNIBI_WISUDA/views/mahasiswa/register.php");
-  exit;
+if ($jenis_peserta === 'reguler') {
+
+    if (!ctype_digit($nim) || strlen($full_nim) !== 9) {
+
+        $_SESSION['error_fields'][] = 'nim';
+
+        $_SESSION['swal_error'] = [
+            'icon' => 'error',
+            'title' => 'Registrasi Gagal',
+            'text' => 'NPM harus 9 digit.'
+        ];
+
+        header("Location: /UNIBI_WISUDA/views/mahasiswa/register.php");
+        exit;
+    }
+
+} else {
+
+    if (empty($full_nim)) {
+
+        $_SESSION['swal_error'] = [
+            'icon' => 'error',
+            'title' => 'Registrasi Gagal',
+            'text' => 'NPM lengkap wajib diisi.'
+        ];
+
+        header("Location: /UNIBI_WISUDA/views/mahasiswa/register.php");
+        exit;
+    }
 }
 
 // 6c. Validasi NIM duplikat
@@ -167,8 +209,9 @@ mysqli_begin_transaction($conn);
 
 try {
   // STEP 1: Insert ke tabel mahasiswa
-  $sql_mhs = "INSERT INTO mahasiswa (id_prodi, id_fakultas, id_akses, nim, nama_mahasiswa, sk_wisuda, password)
-                VALUES ('$id_prodi', '$id_fakultas_from_prodi', '1', '$full_nim', '$nama', '$file_sk', '$password')";
+  
+  $sql_mhs = "INSERT INTO mahasiswa (id_prodi, id_fakultas, id_akses, nim, nama_mahasiswa, sk_wisuda, password, jenis_peserta)
+                VALUES ('$id_prodi', '$id_fakultas_from_prodi', '1', '$full_nim', '$nama', '$file_sk', '$password', '$jenis_peserta')";
   if (!mysqli_query($conn, $sql_mhs)) {
     throw new Exception("Error mahasiswa: " . mysqli_error($conn));
   }

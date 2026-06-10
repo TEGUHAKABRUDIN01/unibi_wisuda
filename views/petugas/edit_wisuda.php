@@ -31,7 +31,8 @@ $query = mysqli_query($conn, "
     m.nama_mahasiswa,
     m.nim,
     m.id_prodi,
-    f.npm_format
+    f.npm_format,
+    m.jenis_peserta
   FROM proses_wisuda p
   JOIN mahasiswa m ON p.id_mahasiswa = m.id_mahasiswa
   JOIN fakultas f ON m.id_fakultas = f.id_fakultas
@@ -40,13 +41,25 @@ $query = mysqli_query($conn, "
 
 $data = mysqli_fetch_assoc($query);
 
+
 if (!$data) {
   echo "<script>alert('Data tidak ditemukan'); window.location='dashboard_petugas.php';</script>";
   exit;
 }
 
-$prefix = $data['npm_format'] ?? '';
-$suffix_nim = !empty($prefix) && strpos($data['nim'], $prefix) === 0 ? substr($data['nim'], strlen($prefix)) : $data['nim'];
+if ($data['jenis_peserta'] === 'susulan') {
+
+    $prefix = '';
+    $suffix_nim = $data['nim'];
+
+} else {
+
+    $prefix = $data['npm_format'];
+
+    $suffix_nim = strpos($data['nim'], $prefix) === 0
+        ? substr($data['nim'], strlen($prefix))
+        : $data['nim'];
+}
 
 /* ===============================
    Buffer ke layout
