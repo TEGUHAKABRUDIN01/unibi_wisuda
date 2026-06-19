@@ -58,51 +58,64 @@ try {
 
     if ($id_manajemen > 0) {
 
-        $sql = "
-            UPDATE manajemen_wisuda
-            SET
-                angkatan = '$angkatan',
-                tgl_mulai = '$tgl_mulai',
-                jam_mulai = '$jam_mulai',
-                tgl_selesai = '$tgl_selesai',
-                jam_selesai = '$jam_selesai',
-                tempat = '$tempat',
-                alamat = '$alamat',
-                status = 'aktif',
-                updated_at = NOW()
-            WHERE id_manajemen = $id_manajemen
-        ";
+    // Simpan sebagai event baru
+    $sql = "
+        INSERT INTO manajemen_wisuda
+        (
+            angkatan,
+            tgl_mulai,
+            jam_mulai,
+            tgl_selesai,
+            jam_selesai,
+            tempat,
+            alamat,
+            status,
+            created_at
+        )
+        VALUES
+        (
+            '$angkatan',
+            '$tgl_mulai',
+            '$jam_mulai',
+            '$tgl_selesai',
+            '$jam_selesai',
+            '$tempat',
+            '$alamat',
+            'aktif',
+            NOW()
+        )
+    ";
 
-    } else {
+} else {
 
-        $sql = "
-            INSERT INTO manajemen_wisuda
-            (
-                angkatan,
-                tgl_mulai,
-                jam_mulai,
-                tgl_selesai,
-                jam_selesai,
-                tempat,
-                alamat,
-                status,
-                created_at
-            )
-            VALUES
-            (
-                '$angkatan',
-                '$tgl_mulai',
-                '$jam_mulai',
-                '$tgl_selesai',
-                '$jam_selesai',
-                '$tempat',
-                '$alamat',
-                'aktif',
-                NOW()
-            )
-        ";
+    $sql = "
+        INSERT INTO manajemen_wisuda
+        (
+            angkatan,
+            tgl_mulai,
+            jam_mulai,
+            tgl_selesai,
+            jam_selesai,
+            tempat,
+            alamat,
+            status,
+            created_at
+        )
+        VALUES
+        (
+            '$angkatan',
+            '$tgl_mulai',
+            '$jam_mulai',
+            '$tgl_selesai',
+            '$jam_selesai',
+            '$tempat',
+            '$alamat',
+            'aktif',
+            NOW()
+        )
+    ";
 
-    }
+}
 
     if (!mysqli_query($conn, $sql)) {
         throw new Exception(mysqli_error($conn));

@@ -55,7 +55,7 @@ if (!$registration_open) {
         <div class="form-group">
           <label>Jenis Peserta</label>
           <select name="jenis_peserta" id="jenis_peserta" onchange="toggleNpmMode()">
-            <option value="reguler">Wisuda Reguler</option>
+            <option value="sekarang">Wisuda Reguler</option>
             <option value="susulan">Wisuda Susulan / Angkatan Sebelumnya</option>
           </select>
         </div>

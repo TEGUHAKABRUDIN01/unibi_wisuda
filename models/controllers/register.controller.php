@@ -12,7 +12,7 @@ $_SESSION['error_fields'] = [];
 
 // 1. Ambil input
 $nama     = trim($_POST['nama']);
-$jenis_peserta = $_POST['jenis_peserta'] ?? 'reguler';
+$jenis_peserta = $_POST['jenis_peserta'] ?? 'sekarang';
 $nim        = trim($_POST['nim'] ?? '');
 $nim_manual = trim($_POST['nim_manual'] ?? '');
 $password = trim($_POST['password']);
@@ -39,7 +39,7 @@ if (empty($id_prodi)) $_SESSION['error_fields'][] = 'id_prodi';
 if (empty($id_fakultas)) $_SESSION['error_fields'][] = 'id_fakultas';
 if (empty($file['name'])) $_SESSION['error_fields'][] = 'sk_wisuda';
 
-if ($jenis_peserta === 'reguler') {
+if ($jenis_peserta === 'sekarang') {
 
     if (empty($nim)) {
         $_SESSION['error_fields'][] = 'nim';
@@ -136,7 +136,7 @@ if (preg_match('/[0-9]/', $nama)) {
 }
 
 // 6b. Validasi NIM: harus angka & sesuai panjang format
-if ($jenis_peserta === 'reguler') {
+if ($jenis_peserta === 'sekarang') {
 
     if (!ctype_digit($nim) || strlen($full_nim) !== 9) {
 

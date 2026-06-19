@@ -14,7 +14,9 @@ $manajemen = mysqli_fetch_assoc($result_manajemen);
 // Proteksi: jika sudah ada event (aktif/selesai), redirect ke dashboard
 if ($manajemen) {
     $status_skrg = getAutoManajemenStatus($manajemen);
-    if ($status_skrg === 'aktif' || $status_skrg === 'selesai') {
+
+    // Hanya blokir saat wisuda sedang aktif
+    if ($status_skrg === 'aktif') {
         header("Location: /UNIBI_WISUDA/views/petugas/dashboard_petugas.php");
         exit;
     }
@@ -35,12 +37,312 @@ ob_start();
 <p>Isi data acara, format NPM per fakultas, dan tanggal agar sistem berjalan saat wisuda dimulai.</p>
 
 <style>
-.management-form .form-step { display: none; }
-.management-form .form-step.active { display: block; }
-.step-buttons { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
-.step-btn { padding: 0.75rem 1rem; border: 1px solid #ccc; background: #fff; cursor: pointer; }
-.step-btn.active { background: #007bff; color: #fff; border-color: #007bff; }
+
+.management-card{
+    background:#fff;
+    padding:20px;
+    border-radius:16px;
+    box-shadow:0 4px 20px rgba(0,0,0,.05);
+    margin-bottom:25px;
+}
+
+.management-status{
+    margin-bottom:10px;
+}
+
+.badge{
+    padding:6px 12px;
+    border-radius:30px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.badge-success{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.badge-warning{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.badge-secondary{
+    background:#e2e8f0;
+    color:#334155;
+}
+
+
+/* ===== Step ===== */
+
+.step-buttons{
+    display:flex;
+    gap:10px;
+    margin-bottom:25px;
+}
+
+.step-btn{
+    flex:1;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#f1f5f9;
+
+    color:#475569;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.step-btn:hover{
+    background:#dbeafe;
+}
+
+
+.step-btn.active{
+
+    background:#2563eb;
+
+    color:white;
+
+    box-shadow:0 4px 15px rgba(37,99,235,.3);
+
+}
+
+
+/* ===== Form ===== */
+
+.management-form{
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:16px;
+
+    box-shadow:0 4px 20px rgba(0,0,0,.05);
+
+}
+
+
+.form-step{
+
+    display:none;
+
+}
+
+
+.form-step.active{
+
+    display:block;
+
+}
+
+
+.form-group{
+
+    margin-bottom:20px;
+
+}
+
+
+.form-group label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-weight:600;
+
+    color:#334155;
+
+}
+
+
+.form-group input{
+
+    width:100%;
+
+    padding:12px 15px;
+
+    border:1px solid #cbd5e1;
+
+    border-radius:10px;
+
+    font-size:14px;
+
+    transition:.3s;
+
+}
+
+
+.form-group input:focus{
+
+    outline:none;
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 0 3px rgba(37,99,235,.15);
+
+}
+
+
+
+/* ===== Inline ===== */
+
+
+.form-inline{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:20px;
+
+}
+
+
+
+/* ===== Fakultas Table ===== */
+
+.faculty-table{
+
+    margin-top:20px;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+}
+
+
+.faculty-row{
+
+    display:grid;
+
+    grid-template-columns:2fr 2fr 1fr;
+
+    align-items:center;
+
+}
+
+
+.faculty-header{
+
+    background:#f8fafc;
+
+    font-weight:700;
+
+    color:#334155;
+
+}
+
+
+.faculty-row div{
+
+    padding:16px;
+
+    border-bottom:1px solid #e2e8f0;
+
+}
+
+
+.faculty-row:last-child div{
+
+    border-bottom:none;
+
+}
+
+
+.faculty-row input{
+
+    width:100%;
+
+    padding:10px;
+
+    border:1px solid #cbd5e1;
+
+    border-radius:8px;
+
+}
+
+
+.faculty-row input:focus{
+
+    outline:none;
+
+    border-color:#2563eb;
+
+}
+
+
+
+/* ===== Button Save ===== */
+
+button[name="save_manajemen"]{
+
+    margin-top:25px;
+
+    padding:14px 25px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+
+button[name="save_manajemen"]:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-2px);
+
+}
+
+
+
+/* ===== Responsive ===== */
+
+@media(max-width:768px){
+
+    .form-inline{
+        grid-template-columns:1fr;
+    }
+
+    .faculty-row{
+        grid-template-columns:1fr;
+    }
+
+    .step-buttons{
+        flex-direction:column;
+    }
+
+}
+
 </style>
+</>
 
 <div class="management-card">
     <?php if ($manajemen): ?>

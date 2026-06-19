@@ -8,43 +8,141 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'petugas') {
     exit;
 }
 
-// 1. Ambil data Wisudawan
-$query_proses = mysqli_query($conn, "SELECT COUNT(*) AS total_proses FROM proses_wisuda WHERE status_proses = 'proses'");
+
+/* =====================================================
+   MANAJEMEN WISUDA AKTIF
+===================================================== */
+$manajemen_data = getLatestManajemen($conn);
+
+$id_manajemen = 0;
+
+if ($manajemen_data) {
+    $id_manajemen = $manajemen_data['id_manajemen'];
+}
+
+
+/* =====================================================
+   TOTAL WISUDAWAN
+===================================================== */
+
+$query_total = mysqli_query($conn,"
+SELECT COUNT(DISTINCT id_mahasiswa) AS total
+FROM proses_wisuda
+WHERE id_manajemen = '$id_manajemen'
+");
+
+$data_total = mysqli_fetch_assoc($query_total);
+
+$total_wisudawan = $data_total['total'];
+
+
+
+/* =====================================================
+   MENUNGGU KONFIRMASI
+===================================================== */
+
+$query_proses = mysqli_query($conn,"
+SELECT COUNT(*) AS total_proses
+FROM proses_wisuda
+WHERE status_proses='proses'
+AND id_manajemen='$id_manajemen'
+");
+
 $data_proses = mysqli_fetch_assoc($query_proses);
 
-$query_selesai = mysqli_query($conn, "SELECT COUNT(*) AS total_selesai FROM proses_wisuda WHERE status_proses = 'selesai'");
+
+
+/* =====================================================
+   BERHASIL KONFIRMASI
+===================================================== */
+
+$query_selesai = mysqli_query($conn,"
+SELECT COUNT(*) AS total_selesai
+FROM proses_wisuda
+WHERE status_proses='selesai'
+AND id_manajemen='$id_manajemen'
+");
+
 $data_selesai = mysqli_fetch_assoc($query_selesai);
 
-$total_wisudawan = $data_proses['total_proses'] + $data_selesai['total_selesai'];
 
-// 2. Ambil data Kehadiran & Tamu
-$query_hadir_mhs = mysqli_query($conn, "SELECT COUNT(*) AS total_hadir_mhs FROM detail_wisuda WHERE status_kehadiran = 'hadir'");
-$data_hadir_mhs = mysqli_fetch_assoc($query_hadir_mhs);
 
-// 2a. Ambil status manajemen wisuda
-$manajemen_data = getLatestManajemen($conn);
+/* =====================================================
+   STATUS MANAJEMEN
+===================================================== */
+
 $manajemen_phase = getManajemenPhase($manajemen_data);
 
-$query_hadir_pendamping = mysqli_query($conn, "SELECT COUNT(*) AS total_hadir_pendamping FROM detail_wisuda WHERE status_kehadiran_pendamping = 'hadir'");
+
+
+/* =====================================================
+   KEHADIRAN MAHASISWA
+===================================================== */
+
+$query_hadir_mhs = mysqli_query($conn,"
+SELECT COUNT(*) AS total_hadir_mhs
+FROM detail_wisuda
+WHERE status_kehadiran='hadir'
+");
+
+$data_hadir_mhs = mysqli_fetch_assoc($query_hadir_mhs);
+
+
+
+/* =====================================================
+   KEHADIRAN PENDAMPING
+===================================================== */
+
+$query_hadir_pendamping = mysqli_query($conn,"
+SELECT COUNT(*) AS total_hadir_pendamping
+FROM detail_wisuda
+WHERE status_kehadiran_pendamping='hadir'
+");
+
 $data_hadir_pendamping = mysqli_fetch_assoc($query_hadir_pendamping);
 
-// jumlah tamu hadir = mahasiswa hadir + pendamping hadir
-$total_tamu_hadir = $data_hadir_mhs['total_hadir_mhs'] + $data_hadir_pendamping['total_hadir_pendamping'];
 
-// total tamu acara = semua mahasiswa + semua pendamping
-$query_total_mhs = mysqli_query($conn, "SELECT COUNT(*) AS total_mhs FROM mahasiswa");
+
+$total_tamu_hadir =
+$data_hadir_mhs['total_hadir_mhs']
++
+$data_hadir_pendamping['total_hadir_pendamping'];
+
+
+
+/* =====================================================
+   TOTAL TAMU ACARA
+===================================================== */
+
+$query_total_mhs = mysqli_query($conn,"
+SELECT COUNT(*) AS total_mhs
+FROM mahasiswa
+");
+
 $data_total_mhs = mysqli_fetch_assoc($query_total_mhs);
 
-$query_total_pendamping = mysqli_query($conn, "SELECT COUNT(*) AS total_pendamping FROM pendamping");
-$data_total_pendamping = mysqli_fetch_assoc($query_total_pendamping);
 
-$total_tamu_acara = $data_total_mhs['total_mhs'] + $data_total_pendamping['total_pendamping'];
 
-// 3. Siapkan variabel untuk Layout
+$query_total_pendamping = mysqli_query($conn,"
+SELECT COUNT(*) AS total_pendamping
+FROM pendamping
+");
+
+$data_total_pendamping =
+mysqli_fetch_assoc($query_total_pendamping);
+
+
+
+$total_tamu_acara =
+$data_total_mhs['total_mhs']
++
+$data_total_pendamping['total_pendamping'];
+
+
+
 $title = "Dashboard Petugas";
 
-// 4. Mulai menangkap konten (Output Buffering)
-ob_start(); 
+ob_start();
 ?>
 
 <h1>Dashboard Petugas</h1>

@@ -19,8 +19,9 @@ if (isset($conn)) {
 
 // Tentukan apakah menu manajemen bisa ditampilkan
 // Muncul jika: belum ada manajemen sama sekali
-$canShowManajemenMenu = !$sidebarManajemen;
-
+$canShowManajemenMenu =
+    !$sidebarManajemen ||
+    getAutoManajemenStatus($sidebarManajemen) === 'selesai';
 // Tentukan apakah menu operasional bisa ditampilkan
 // Hanya muncul jika ada manajemen dan masih aktif
 $canShowOperationalMenu = $sidebarManajemen && getAutoManajemenStatus($sidebarManajemen) === 'aktif';
